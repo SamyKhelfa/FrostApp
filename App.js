@@ -1,20 +1,103 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Image } from "react-native";
 
-export default function App() {
+import HomeScreen from "./containers/HomeScreen";
+import ExercisesScreen from "./containers/ExercisesScreen";
+import ShowerChallenge from "./containers/ShowerChallenge";
+import ProfileScreen from "./containers/ProfileScreen";
+import CommunityScreen from "./containers/CommunityScreen";
+import SpotsScreen from "./containers/SpotsScreen";
+import StoryScreen from "./containers/StoryScreen";
+import AcademyScreen from "./containers/AcademyScreen";
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function HomeStack() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerTitle: "Accueil", // Renommer l'écran en "Accueil"
+        }}
+      />
+      <Stack.Screen
+        name="Exercises"
+        component={ExercisesScreen}
+        // Pas besoin de définir headerTitle pour garder le nom par défaut
+      />
+      <Stack.Screen
+        name="ShowerChallenge"
+        component={ShowerChallenge}
+        options={{
+          headerTitle: "Défi douche givrée", // Renommer l'écran
+        }}
+      />
+      <Stack.Screen
+        name="SpotsScreen"
+        component={SpotsScreen}
+        options={{ headerTitle: "Spots givrés" }}
+      />
+      <Stack.Screen
+        name="StoryScreen"
+        component={StoryScreen}
+        options={{ headerTitle: "Mon histoire givrée" }}
+      />
+      <Stack.Screen
+        name="AcademyScreen"
+        component={AcademyScreen}
+        options={{ headerTitle: "Frost Academy" }}
+      />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconColor = focused ? "#4184BF" : "#696969";
+
+            return (
+              <Image
+                source={
+                  route.name === "Accueil"
+                    ? focused
+                      ? require("./images/home-active.png")
+                      : require("./images/home-inactive.png")
+                    : route.name === "Espace givré"
+                    ? focused
+                      ? require("./images/profile-active.png")
+                      : require("./images/profile-inactive.png")
+                    : route.name === "Communauté"
+                    ? focused
+                      ? require("./images/community-active.png")
+                      : require("./images/community-inactive.png")
+                    : null
+                }
+                style={{ width: 24, height: 24, tintColor: iconColor }}
+              />
+            );
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Accueil"
+          component={HomeStack}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen name="Espace givré" component={ProfileScreen} />
+        <Tab.Screen name="Communauté" component={CommunityScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
