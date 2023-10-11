@@ -3,12 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+// import { GOOGLE_PLACES_API_KEY } from "@env";
+import AddSpotModal from "./AddSpotModal";
 
 const SpotsScreen = () => {
   const [markers, setMarkers] = useState([]);
   const [location, setLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [temporaryMarkerLocation, setTemporaryMarkerLocation] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const requestLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -29,6 +32,7 @@ const SpotsScreen = () => {
       };
       setMarkers([...markers, newMarker]);
       setTemporaryMarkerLocation(null);
+      setModalVisible(true);
     }
   };
 
@@ -118,6 +122,7 @@ const SpotsScreen = () => {
           )}
         </MapView>
       )}
+      {isModalVisible && <AddSpotModal />}
       <TouchableOpacity onPress={addMarker} style={styles.button}>
         <Text>Ajouter Spot</Text>
       </TouchableOpacity>
