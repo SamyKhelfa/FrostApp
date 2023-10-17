@@ -46,10 +46,13 @@ const SpotsScreen = () => {
     }
   };
 
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Spots Givrés</Text>
-
       {/* Barre de recherche avec suggestions */}
       <GooglePlacesAutocomplete
         placeholder="Rechercher un endroit"
@@ -92,7 +95,6 @@ const SpotsScreen = () => {
           },
         }}
       />
-
       {location && (
         <MapView
           style={styles.map}
@@ -122,7 +124,9 @@ const SpotsScreen = () => {
           )}
         </MapView>
       )}
-      {isModalVisible && <AddSpotModal />}
+      {isModalVisible && (
+        <AddSpotModal onSave={addMarker} onClose={closeModal} />
+      )}
       <TouchableOpacity onPress={addMarker} style={styles.button}>
         <Text>Ajouter Spot</Text>
       </TouchableOpacity>
