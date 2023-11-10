@@ -5,13 +5,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image } from "react-native";
 
 import HomeScreen from "./containers/HomeScreen";
-import ExercisesScreen from "./containers/ExercisesScreen";
 import ShowerChallenge from "./containers/ShowerChallenge";
 import ProfileScreen from "./containers/ProfileScreen";
 import CommunityScreen from "./containers/CommunityScreen";
 import SpotsScreen from "./containers/SpotsScreen";
 import StoryScreen from "./containers/StoryScreen";
 import AcademyScreen from "./containers/AcademyScreen";
+import CoursesScreen from "./containers/CoursesScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -27,9 +27,9 @@ function HomeStack() {
         }}
       />
       <Stack.Screen
-        name="Exercises"
-        component={ExercisesScreen}
-        // Pas besoin de définir headerTitle pour garder le nom par défaut
+        name="Courses"
+        component={CoursesScreen}
+        options={{ headerTitle: "Formation" }}
       />
       <Stack.Screen
         name="ShowerChallenge"

@@ -9,10 +9,10 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Exercises")}
+          onPress={() => navigation.navigate("Courses")}
         >
           <View style={styles.buttonContent}>
-            <Text style={styles.buttonText}>Méditation guidée</Text>
+            <Text style={styles.buttonText}>Espace formation</Text>
             <Image
               style={styles.meditation}
               source={require("../images/meditation.jpg")}
