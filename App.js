@@ -12,6 +12,7 @@ import SpotsScreen from "./containers/SpotsScreen";
 import StoryScreen from "./containers/StoryScreen";
 import AcademyScreen from "./containers/AcademyScreen";
 import CoursesScreen from "./containers/CoursesScreen";
+import LessonScreen from "./containers/LessonScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,11 @@ function HomeStack() {
         name="AcademyScreen"
         component={AcademyScreen}
         options={{ headerTitle: "Frost Academy" }}
+      />
+      <Stack.Screen
+        name="Lesson"
+        component={LessonScreen}
+        options={{ headerTitle: "Détails de la Leçon" }}
       />
     </Stack.Navigator>
   );
