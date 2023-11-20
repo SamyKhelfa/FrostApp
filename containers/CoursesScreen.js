@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ScrollView,
   Text,
   TouchableOpacity,
   StyleSheet,
   View,
+  Button,
 } from "react-native";
-import VimeoVideo from "./VimeoVideo"; // Assurez-vous que le chemin vers ce fichier est correct.
+import VimeoVideo from "./VimeoVideo";
 
 // Simulate data that might come from an API
 const courseData = [
@@ -14,7 +15,10 @@ const courseData = [
     moduleId: "1",
     title: "🎯 Module 1: Vision, objectif et plan d'action sur-mesure",
     lessons: [
-      { title: "Introduction", vimeoId: "872525023" },
+      {
+        title: "Introduction",
+        vimeoId: "872525023",
+      },
       {
         title: "Clarification de la vision avec le froid",
         vimeoId: "872527912",
@@ -81,68 +85,96 @@ const courseData = [
       },
     ],
   },
-  // ... Ajoutez d'autres modules ici
 ];
 
-const Module = ({ module, onLessonSelect, onModuleToggle }) => {
+const Module = ({
+  module,
+  onLessonSelect,
+  isVisible,
+  selectedModuleId,
+  selectedLessonIndex,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleModule = () => {
-    if (expanded) {
-      onModuleToggle(); // Appelée quand le module est fermé
-    }
     setExpanded(!expanded);
   };
 
   return (
-    <View style={styles.moduleContainer}>
-      <TouchableOpacity style={styles.moduleHeader} onPress={toggleModule}>
-        <Text style={styles.moduleTitle}>{module.title}</Text>
-      </TouchableOpacity>
-      {expanded &&
-        module.lessons.map((lesson, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.lessonItem}
-            onPress={() => onLessonSelect(module.moduleId, index)}
+    isVisible && (
+      <View style={styles.moduleContainer}>
+        <TouchableOpacity style={styles.moduleHeader} onPress={toggleModule}>
+          <Text
+            style={[
+              styles.moduleTitle,
+              module.moduleId === selectedModuleId && styles.highlight,
+            ]}
           >
-            <Text style={styles.lessonText}>{lesson.title}</Text>
-          </TouchableOpacity>
-        ))}
-    </View>
+            {module.title}
+          </Text>
+        </TouchableOpacity>
+        {expanded &&
+          module.lessons.map((lesson, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.lessonItem}
+              onPress={() => onLessonSelect(module.moduleId, index)}
+            >
+              <Text
+                style={[
+                  styles.lessonText,
+                  module.moduleId === selectedModuleId &&
+                    index === selectedLessonIndex &&
+                    styles.highlight,
+                ]}
+              >
+                {lesson.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+      </View>
+    )
   );
 };
 
 const CoursesScreen = () => {
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
+  const [selectedLessonIndex, setSelectedLessonIndex] = useState(null);
+  const [isCoursesVisible, setIsCoursesVisible] = useState(true);
 
   const handleLessonSelect = (moduleId, lessonIndex) => {
-    setSelectedLesson({ moduleId, lessonIndex });
-  };
-
-  const handleModuleToggle = () => {
-    setSelectedLesson(null); // Réinitialise la leçon sélectionnée lorsque le module est fermé
+    const selectedModule = courseData.find(
+      (module) => module.moduleId === moduleId
+    );
+    setSelectedLesson(selectedModule.lessons[lessonIndex]);
+    setSelectedModuleId(moduleId);
+    setSelectedLessonIndex(lessonIndex);
+    setIsCoursesVisible(false);
   };
 
   return (
     <ScrollView style={styles.container}>
-      {courseData.map((module, index) => (
-        <Module
-          key={module.moduleId}
-          module={module}
-          onLessonSelect={handleLessonSelect}
-          onModuleToggle={handleModuleToggle} // Ajout de la nouvelle fonction de gestion
-        />
-      ))}
-      {selectedLesson && (
-        <VimeoVideo
-          vimeoId={
-            courseData.find(
-              (module) => module.moduleId === selectedLesson.moduleId
-            ).lessons[selectedLesson.lessonIndex].vimeoId
-          }
-        />
-      )}
+      <TouchableOpacity
+        style={styles.buttonStyle}
+        onPress={() => setIsCoursesVisible(!isCoursesVisible)}
+      >
+        <Text style={styles.buttonText}>
+          {isCoursesVisible ? "Cacher les Cours" : "Afficher les Cours"}
+        </Text>
+      </TouchableOpacity>
+      {isCoursesVisible &&
+        courseData.map((module) => (
+          <Module
+            key={module.moduleId}
+            module={module}
+            onLessonSelect={handleLessonSelect}
+            isVisible={isCoursesVisible}
+            selectedModuleId={selectedModuleId}
+            selectedLessonIndex={selectedLessonIndex}
+          />
+        ))}
+      {selectedLesson && <VimeoVideo vimeoId={selectedLesson.vimeoId} />}
     </ScrollView>
   );
 };
@@ -150,31 +182,49 @@ const CoursesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0e0e0e",
+    backgroundColor: "#FFFFFF",
   },
   moduleContainer: {
     marginBottom: 5,
     borderBottomWidth: 1,
-    borderBottomColor: "#1f1f1f",
+    borderColor: "#000000",
+    backgroundColor: "#f0f0f0",
   },
   moduleHeader: {
     padding: 15,
     backgroundColor: "#1a1a1a",
+    borderColor: "#000000",
   },
   moduleTitle: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontWeight: "700",
+    fontSize: 18,
   },
   lessonItem: {
     padding: 15,
-    backgroundColor: "#262626",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#1f1f1f",
   },
   lessonText: {
-    color: "#ddd",
+    color: "#000000",
+    fontSize: 16,
   },
-  // Add other styles you may need
+  highlight: {
+    backgroundColor: "#212f65",
+    color: "#FFFFFF",
+  },
+  buttonStyle: {
+    backgroundColor: "#4a90e2",
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
 });
 
 export default CoursesScreen;
