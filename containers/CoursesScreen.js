@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// CoursesScreen.js
+
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   Text,
@@ -6,97 +8,18 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import VimeoVideo from "./VimeoVideo"; // Assurez-vous que le chemin vers ce fichier est correct.
+import VimeoVideo from "./VimeoVideo";
+import courseData from "./CourseData"; // Importez les données des cours ici
 
-// Simulate data that might come from an API
-const courseData = [
-  {
-    moduleId: "1",
-    title: "🎯 Module 1: Vision, objectif et plan d'action sur-mesure",
-    lessons: [
-      { title: "Introduction", vimeoId: "872525023" },
-      {
-        title: "Clarification de la vision avec le froid",
-        vimeoId: "872527912",
-      },
-      {
-        title: "Ton nouvel objectif avec la douche froide",
-        vimeoId: "872530511",
-      },
-      {
-        title: "3 méthodes pour prendre des douches froides",
-        vimeoId: "872531319",
-      },
-      {
-        title: "Construction de ton plan d’action sur-mesure",
-        vimeoId: "872532012",
-      },
-      { title: "L'état d'esprit indispensable pour toi", vimeoId: "872533537" },
-    ],
-  },
-  {
-    moduleId: "2",
-    title: "🧊 Module 2 : 7 techniques pour améliorer ton rapport au froid",
-    lessons: [
-      {
-        title: "Comment bien respirer sous tes douches froides",
-        vimeoId: "872534368",
-      },
-      {
-        title:
-          "Tips simples et puissants pour te sentir plus à l'aise avec le froid",
-        vimeoId: "872535440",
-      },
-    ],
-  },
-  {
-    moduleId: "3",
-    title: "🗓️ Module 3 : Routine solide et régularité",
-    lessons: [
-      {
-        title:
-          "Le best moment de la journée pour tes douches froides (pour toi)",
-        vimeoId: "872536608",
-      },
-      {
-        title: "Faut-il arrêter les douches chaudes ?",
-        vimeoId: "872538611",
-      },
-      {
-        title: "Faire de la douche froide une habitude quotidienne et solide",
-        vimeoId: "872539834",
-      },
-      {
-        title: "La règle d'or pour être régulier(ère)",
-        vimeoId: "872540578",
-      },
-      {
-        title:
-          "Réduire ta procrastination pour passer à l’action plus facilement",
-        vimeoId: "872541362",
-      },
-      {
-        title: "L'outil magique pour booster ta régularité et ta satisfaction",
-        vimeoId: "872542849",
-      },
-    ],
-  },
-  // ... Ajoutez d'autres modules ici
-];
-
-const Module = ({ module, onLessonSelect, onModuleToggle }) => {
+const Module = ({ module, onSelectLesson }) => {
   const [expanded, setExpanded] = useState(false);
-
-  const toggleModule = () => {
-    if (expanded) {
-      onModuleToggle(); // Appelée quand le module est fermé
-    }
-    setExpanded(!expanded);
-  };
 
   return (
     <View style={styles.moduleContainer}>
-      <TouchableOpacity style={styles.moduleHeader} onPress={toggleModule}>
+      <TouchableOpacity
+        style={styles.moduleHeader}
+        onPress={() => setExpanded(!expanded)}
+      >
         <Text style={styles.moduleTitle}>{module.title}</Text>
       </TouchableOpacity>
       {expanded &&
@@ -104,7 +27,7 @@ const Module = ({ module, onLessonSelect, onModuleToggle }) => {
           <TouchableOpacity
             key={index}
             style={styles.lessonItem}
-            onPress={() => onLessonSelect(module.moduleId, index)}
+            onPress={() => onSelectLesson(lesson)}
           >
             <Text style={styles.lessonText}>{lesson.title}</Text>
           </TouchableOpacity>
@@ -113,36 +36,29 @@ const Module = ({ module, onLessonSelect, onModuleToggle }) => {
   );
 };
 
-const CoursesScreen = () => {
+const CoursesScreen = ({ route }) => {
   const [selectedLesson, setSelectedLesson] = useState(null);
 
-  const handleLessonSelect = (moduleId, lessonIndex) => {
-    setSelectedLesson({ moduleId, lessonIndex });
-  };
+  useEffect(() => {
+    if (route.params?.selectedLesson) {
+      setSelectedLesson(route.params.selectedLesson);
+    }
+  }, [route.params?.selectedLesson]);
 
-  const handleModuleToggle = () => {
-    setSelectedLesson(null); // Réinitialise la leçon sélectionnée lorsque le module est fermé
+  const handleSelectLesson = (lesson) => {
+    setSelectedLesson(lesson);
   };
 
   return (
     <ScrollView style={styles.container}>
-      {courseData.map((module, index) => (
+      {courseData.map((module) => (
         <Module
           key={module.moduleId}
           module={module}
-          onLessonSelect={handleLessonSelect}
-          onModuleToggle={handleModuleToggle} // Ajout de la nouvelle fonction de gestion
+          onSelectLesson={handleSelectLesson}
         />
       ))}
-      {selectedLesson && (
-        <VimeoVideo
-          vimeoId={
-            courseData.find(
-              (module) => module.moduleId === selectedLesson.moduleId
-            ).lessons[selectedLesson.lessonIndex].vimeoId
-          }
-        />
-      )}
+      {selectedLesson && <VimeoVideo vimeoId={selectedLesson.vimeoId} />}
     </ScrollView>
   );
 };
@@ -174,7 +90,7 @@ const styles = StyleSheet.create({
   lessonText: {
     color: "#ddd",
   },
-  // Add other styles you may need
+  // Ajoutez d'autres styles si nécessaire
 });
 
 export default CoursesScreen;
