@@ -21,7 +21,6 @@ const CoursesScreen = () => {
       try {
         const response = await axios.get("http://192.168.0.222:3000/courses");
         setCourseData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -64,7 +63,6 @@ const CoursesScreen = () => {
     </ScrollView>
   );
 };
-
 const Module = ({
   module,
   onLessonSelect,
