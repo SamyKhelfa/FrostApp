@@ -10,106 +10,113 @@ import {
 import VimeoVideo from "./VimeoVideo";
 
 const CoursesScreen = () => {
-  const [courseData, setCourseData] = useState([]);
+  const [programData, setProgramData] = useState([]);
+  const [expandedProgramId, setExpandedProgramId] = useState(null);
+  const [expandedCourseId, setExpandedCourseId] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [selectedModuleId, setSelectedModuleId] = useState(null);
-  const [selectedLessonIndex, setSelectedLessonIndex] = useState(null);
-  const [isCoursesVisible, setIsCoursesVisible] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://192.168.0.222:3000/courses");
-        setCourseData(response.data);
+        const response = await axios.get("http://192.168.0.222:3000/programs");
+        setProgramData(response.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     fetchData();
   }, []);
 
-  const handleLessonSelect = (moduleId, lessonIndex) => {
-    const selectedModule = courseData.find(
-      (module) => module.moduleId === moduleId
-    );
-    setSelectedLesson(selectedModule.lessons[lessonIndex]);
-    setSelectedModuleId(moduleId);
-    setSelectedLessonIndex(lessonIndex);
-    setIsCoursesVisible(false);
+  const toggleProgram = (programId) => {
+    if (expandedProgramId === programId) {
+      setExpandedProgramId(null);
+      setExpandedCourseId(null);
+      setSelectedLesson(null);
+    } else {
+      setExpandedProgramId(programId);
+    }
+  };
+
+  const toggleCourse = (courseId) => {
+    if (expandedCourseId === courseId) {
+      setExpandedCourseId(null);
+      setSelectedLesson(null);
+    } else {
+      setExpandedCourseId(courseId);
+    }
+  };
+
+  const handleLessonSelect = (lesson) => {
+    setSelectedLesson(lesson);
   };
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => setIsCoursesVisible(!isCoursesVisible)}
-      >
-        <Text style={styles.buttonText}>
-          {isCoursesVisible ? "Cacher les Cours" : "Afficher les Cours"}
-        </Text>
-      </TouchableOpacity>
-      {isCoursesVisible &&
-        courseData.map((module, index) => (
-          <Module
-            key={module.moduleId}
-            module={module}
-            onLessonSelect={handleLessonSelect}
-            isVisible={isCoursesVisible}
-            selectedModuleId={selectedModuleId}
-            selectedLessonIndex={selectedLessonIndex}
-          />
-        ))}
-      {selectedLesson && <VimeoVideo vimeoId={selectedLesson.vimeoId} />}
+      {programData.map((program) => (
+        <Program
+          key={program._id}
+          program={program}
+          onToggleProgram={() => toggleProgram(program._id)}
+          expandedProgram={expandedProgramId === program._id}
+          onToggleCourse={toggleCourse}
+          expandedCourseId={expandedCourseId}
+          onLessonSelect={handleLessonSelect}
+        />
+      ))}
+      {selectedLesson && (
+        <View>
+          <VimeoVideo vimeoId={selectedLesson.vimeoId} />
+          <Text>{selectedLesson.text}</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };
-const Module = ({
-  module,
+
+const Program = ({
+  program,
+  onToggleProgram,
+  expandedProgram,
+  onToggleCourse,
+  expandedCourseId,
   onLessonSelect,
-  isVisible,
-  selectedModuleId,
-  selectedLessonIndex,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleModule = () => {
-    setExpanded(!expanded);
-  };
-
   return (
-    isVisible && (
-      <View style={styles.moduleContainer}>
-        <TouchableOpacity style={styles.moduleHeader} onPress={toggleModule}>
-          <Text
-            style={[
-              styles.moduleTitle,
-              module.moduleId === selectedModuleId && styles.highlight,
-            ]}
+    <View style={styles.programContainer}>
+      <TouchableOpacity style={styles.programHeader} onPress={onToggleProgram}>
+        <Text style={styles.programTitle}>{program.programTitle}</Text>
+      </TouchableOpacity>
+      {expandedProgram &&
+        program.courses.map((course) => (
+          <Course
+            key={course._id}
+            course={course}
+            onToggleCourse={() => onToggleCourse(course._id)}
+            expanded={expandedCourseId === course._id}
+            onLessonSelect={onLessonSelect}
+          />
+        ))}
+    </View>
+  );
+};
+
+const Course = ({ course, onToggleCourse, expanded, onLessonSelect }) => {
+  return (
+    <View style={styles.courseContainer}>
+      <TouchableOpacity style={styles.courseHeader} onPress={onToggleCourse}>
+        <Text style={styles.courseTitle}>{course.title}</Text>
+      </TouchableOpacity>
+      {expanded &&
+        course.lessons.map((lesson, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.lessonItem}
+            onPress={() => onLessonSelect(lesson)}
           >
-            {module.title}
-          </Text>
-        </TouchableOpacity>
-        {expanded &&
-          module.lessons.map((lesson, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.lessonItem}
-              onPress={() => onLessonSelect(module.moduleId, index)}
-            >
-              <Text
-                style={[
-                  styles.lessonText,
-                  module.moduleId === selectedModuleId &&
-                    index === selectedLessonIndex &&
-                    styles.highlight,
-                ]}
-              >
-                {lesson.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-      </View>
-    )
+            <Text style={styles.lessonText}>{lesson.title}</Text>
+          </TouchableOpacity>
+        ))}
+    </View>
   );
 };
 
@@ -118,18 +125,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-  moduleContainer: {
+  programContainer: {
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderColor: "#000000",
+  },
+  programHeader: {
+    padding: 15,
+    backgroundColor: "#1a1a1a",
+  },
+  programTitle: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 20,
+  },
+  courseContainer: {
     marginBottom: 5,
     borderBottomWidth: 1,
     borderColor: "#000000",
     backgroundColor: "#f0f0f0",
   },
-  moduleHeader: {
+  courseHeader: {
     padding: 15,
     backgroundColor: "#1a1a1a",
-    borderColor: "#000000",
   },
-  moduleTitle: {
+  courseTitle: {
     color: "#FFFFFF",
     fontWeight: "700",
     fontSize: 18,
