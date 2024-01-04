@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Image } from "react-native";
+import { Image, TouchableOpacity, Text } from "react-native";
 
 import HomeScreen from "./containers/HomeScreen";
 import ShowerChallenge from "./containers/ShowerChallenge";
@@ -13,6 +13,8 @@ import StoryScreen from "./containers/StoryScreen";
 import AcademyScreen from "./containers/AcademyScreen";
 import CoursesScreen from "./containers/CoursesScreen";
 import LessonScreen from "./containers/LessonScreen";
+import LoginScreen from "./containers/LoginScreen";
+import SignUpScreen from "./containers/SignUpScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -23,9 +25,17 @@ function HomeStack() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{
-          headerTitle: "Accueil", // Renommer l'écran en "Accueil"
-        }}
+        options={({ navigation }) => ({
+          headerTitle: "Accueil",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Login")}
+              style={{ marginLeft: 10 }}
+            >
+              <Text>Connexion</Text>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="Courses"
@@ -36,7 +46,7 @@ function HomeStack() {
         name="ShowerChallenge"
         component={ShowerChallenge}
         options={{
-          headerTitle: "Défi douche givrée", // Renommer l'écran
+          headerTitle: "Défi douche givrée",
         }}
       />
       <Stack.Screen
@@ -59,6 +69,8 @@ function HomeStack() {
         component={LessonScreen}
         options={{ headerTitle: "Détails de la Leçon" }}
       />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
     </Stack.Navigator>
   );
 }
@@ -70,7 +82,6 @@ function App() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             let iconColor = focused ? "#4184BF" : "#696969";
-
             return (
               <Image
                 source={
