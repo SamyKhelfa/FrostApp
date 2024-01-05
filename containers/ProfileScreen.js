@@ -26,7 +26,10 @@ const ProfileScreen = ({ navigation }) => {
 
       <View style={styles.section}>
         <Button title="Modifier le Profil" onPress={() => {}} />
-        <Button title="Changer de Mot de Passe" onPress={() => {}} />
+        <Button
+          title="Changer de Mot de Passe"
+          onPress={() => navigation.navigate("ChangePasswordScreen")}
+        />
         <Button title="Se Déconnecter" onPress={() => {}} />
       </View>
 

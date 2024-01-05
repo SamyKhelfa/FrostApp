@@ -19,7 +19,7 @@ const LoginScreen = ({ navigation }) => {
         password,
       });
       console.log(response.data);
-      navigation.navigate("ProfileScreen"); // Redirigez vers l'écran de profil après la connexion
+      navigation.navigate("Profile"); // Redirigez vers l'écran de profil après la connexion
     } catch (error) {
       console.error(error);
     }
