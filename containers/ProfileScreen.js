@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,45 +7,71 @@ import {
   Button,
   ScrollView,
 } from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const userId = await AsyncStorage.getItem("userId"); // Récupérer l'ID de l'utilisateur
+        const token = await AsyncStorage.getItem("userToken"); // Récupérer le token de l'utilisateur
+        const response = await axios.get(
+          `http://192.168.0.222:3000/users/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des données de l'utilisateur:",
+          error
+        );
+      }
+    };
+
+    getUserInfo();
+  }, []);
+
+  if (!userInfo) {
+    return <Text>Chargement des données utilisateur...</Text>; // Affichage pendant le chargement des données
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Image
-        source={{ uri: "https://via.placeholder.com/150" }}
+        source={{
+          uri: userInfo.profilePicture || "https://via.placeholder.com/150",
+        }}
         style={styles.image}
       />
-      <Text style={styles.title}>Nom d'Utilisateur</Text>
-      <Text style={styles.text}>email@example.com</Text>
+      <Text style={styles.title}>
+        {userInfo.firstName} {userInfo.lastName}
+      </Text>
+      <Text style={styles.text}>{userInfo.email}</Text>
+
+      {/* Sections supplémentaires basées sur les données de userInfo */}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Statistiques</Text>
-        <Text style={styles.text}>Défis complétés: 10</Text>
-        <Text style={styles.text}>Cours suivis: 5</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Button title="Modifier le Profil" onPress={() => {}} />
+        <Button
+          title="Modifier le Profil"
+          onPress={() => {
+            /* Logique pour modifier le profil */
+          }}
+        />
         <Button
           title="Changer de Mot de Passe"
           onPress={() => navigation.navigate("ChangePasswordScreen")}
         />
-        <Button title="Se Déconnecter" onPress={() => {}} />
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Activités Récents</Text>
-        <Text style={styles.text}>
-          Dernier cours suivi: Introduction à la respiration givrée
-        </Text>
-        <Text style={styles.text}>
-          Dernier défi relevé: Douche givrée niveau 2
-        </Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Vos Commentaires</Text>
-        <Button title="Laisser un Feedback" onPress={() => {}} />
+        <Button
+          title="Se Déconnecter"
+          onPress={() => {
+            /* Logique pour se déconnecter */
+          }}
+        />
       </View>
     </ScrollView>
   );
@@ -77,11 +103,7 @@ const styles = StyleSheet.create({
   section: {
     marginTop: 20,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+  // ... Autres styles si nécessaire
 });
 
 export default ProfileScreen;

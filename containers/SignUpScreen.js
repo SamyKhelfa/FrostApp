@@ -14,9 +14,28 @@ const SignUpScreen = ({ navigation }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false); // État pour gérer l'affichage du message de succès
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const validateFields = () => {
+    setFirstNameError(!firstName.trim());
+    setLastNameError(!lastName.trim());
+    setEmailError(!email.trim());
+    setPasswordError(!password.trim());
+    return (
+      firstName.trim() && lastName.trim() && email.trim() && password.trim()
+    );
+  };
 
   const handleSignUp = async () => {
+    if (!validateFields()) {
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://192.168.0.222:3000/users/signup",
@@ -28,19 +47,16 @@ const SignUpScreen = ({ navigation }) => {
         }
       );
       console.log(response.data);
-      setIsRegistered(true); // Mise à jour de l'état pour afficher le message de succès
+      setIsRegistered(true);
 
-      // Rediriger vers la page de profil après un délai
       setTimeout(() => {
         navigation.navigate("Profile");
       }, 3000);
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 409) {
-        // Si l'e-mail existe déjà
         Alert.alert("Erreur", "Cet e-mail est déjà utilisé.");
       } else {
-        // Pour d'autres types d'erreurs
         Alert.alert(
           "Erreur",
           "Une erreur s'est produite lors de l'inscription."
@@ -57,40 +73,50 @@ const SignUpScreen = ({ navigation }) => {
         </Text>
       ) : (
         <>
+          {firstNameError && (
+            <Text style={styles.errorMessage}>Le prénom est requis.</Text>
+          )}
           <TextInput
             placeholder="Prénom"
             value={firstName}
             onChangeText={setFirstName}
-            style={styles.input}
+            style={[styles.input, firstNameError && styles.errorInput]}
           />
+
+          {lastNameError && (
+            <Text style={styles.errorMessage}>Le nom est requis.</Text>
+          )}
           <TextInput
             placeholder="Nom"
             value={lastName}
             onChangeText={setLastName}
-            style={styles.input}
+            style={[styles.input, lastNameError && styles.errorInput]}
           />
+
+          {emailError && (
+            <Text style={styles.errorMessage}>L'email est requis.</Text>
+          )}
           <TextInput
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
-            style={styles.input}
+            style={[styles.input, emailError && styles.errorInput]}
           />
+
+          {passwordError && (
+            <Text style={styles.errorMessage}>Le mot de passe est requis.</Text>
+          )}
           <TextInput
             placeholder="Mot de passe"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            style={styles.input}
+            style={[styles.input, passwordError && styles.errorInput]}
           />
+
           <TouchableOpacity style={styles.button} onPress={handleSignUp}>
             <Text style={styles.buttonText}>S'inscrire</Text>
           </TouchableOpacity>
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Déjà givré ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.loginButton}>Connecte-toi !</Text>
-            </TouchableOpacity>
-          </View>
         </>
       )}
     </View>
@@ -106,13 +132,22 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width: "100%",
-    marginBottom: 15,
+    marginBottom: 5,
     borderWidth: 1,
     borderColor: "#4184BF",
     borderRadius: 5,
     padding: 10,
     fontSize: 18,
     backgroundColor: "#FFFFFF",
+  },
+  errorInput: {
+    borderColor: "red",
+    borderWidth: 2,
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 5,
   },
   button: {
     backgroundColor: "#4184BF",
@@ -125,21 +160,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "bold",
-  },
-  loginContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  loginText: {
-    color: "#707070",
-    fontSize: 16,
-  },
-  loginButton: {
-    color: "#4184BF",
-    textDecorationLine: "underline",
-    fontSize: 16,
-    marginLeft: 5,
   },
   successMessage: {
     fontSize: 18,

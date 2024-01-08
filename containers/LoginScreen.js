@@ -11,8 +11,20 @@ import axios from "axios";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const validateFields = () => {
+    setEmailError(!email.trim());
+    setPasswordError(!password.trim());
+    return email.trim() && password.trim();
+  };
 
   const handleLogin = async () => {
+    if (!validateFields()) {
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:3000/users/login", {
         email,
@@ -22,27 +34,37 @@ const LoginScreen = ({ navigation }) => {
       navigation.navigate("Profile"); // Redirigez vers l'écran de profil après la connexion
     } catch (error) {
       console.error(error);
+      // Ici, vous pouvez gérer les erreurs de connexion (par exemple, utilisateur/mot de passe incorrect)
     }
   };
 
   return (
     <View style={styles.container}>
+      {emailError && (
+        <Text style={styles.errorMessage}>L'email est requis.</Text>
+      )}
       <TextInput
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
+        style={[styles.input, emailError && styles.errorInput]}
       />
+
+      {passwordError && (
+        <Text style={styles.errorMessage}>Le mot de passe est requis.</Text>
+      )}
       <TextInput
         placeholder="Mot de passe"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={styles.input}
+        style={[styles.input, passwordError && styles.errorInput]}
       />
+
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Se connecter</Text>
       </TouchableOpacity>
+
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Pas encore givré ?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
@@ -98,6 +120,15 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontSize: 16,
     marginLeft: 5,
+  },
+  errorInput: {
+    borderColor: "red",
+    borderWidth: 2,
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 5,
   },
 });
 
