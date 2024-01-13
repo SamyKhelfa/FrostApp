@@ -16,8 +16,8 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const userId = await AsyncStorage.getItem("userId"); // Récupérer l'ID de l'utilisateur
-        const token = await AsyncStorage.getItem("userToken"); // Récupérer le token de l'utilisateur
+        const userId = await AsyncStorage.getItem("userId"); // Assurez-vous que c'est la bonne clé
+        const token = await AsyncStorage.getItem("userToken"); // Et pour le token également
         const response = await axios.get(
           `http://192.168.0.222:3000/users/${userId}`,
           {
@@ -37,15 +37,13 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   if (!userInfo) {
-    return <Text>Chargement des données utilisateur...</Text>; // Affichage pendant le chargement des données
+    return <Text>Chargement des données utilisateur...</Text>;
   }
 
   return (
     <ScrollView style={styles.container}>
       <Image
-        source={{
-          uri: userInfo.profilePicture || "https://via.placeholder.com/150",
-        }}
+        source={{ uri: "https://via.placeholder.com/150" }} // Remplacez par l'URL de l'image de l'utilisateur, si disponible
         style={styles.image}
       />
       <Text style={styles.title}>
@@ -53,13 +51,13 @@ const ProfileScreen = ({ navigation }) => {
       </Text>
       <Text style={styles.text}>{userInfo.email}</Text>
 
-      {/* Sections supplémentaires basées sur les données de userInfo */}
+      {/* Ajouter d'autres sections selon les besoins */}
 
       <View style={styles.section}>
         <Button
           title="Modifier le Profil"
           onPress={() => {
-            /* Logique pour modifier le profil */
+            /* Logique de modification du profil */
           }}
         />
         <Button
@@ -69,7 +67,7 @@ const ProfileScreen = ({ navigation }) => {
         <Button
           title="Se Déconnecter"
           onPress={() => {
-            /* Logique pour se déconnecter */
+            /* Logique de déconnexion */
           }}
         />
       </View>
@@ -103,7 +101,7 @@ const styles = StyleSheet.create({
   section: {
     marginTop: 20,
   },
-  // ... Autres styles si nécessaire
+  // Autres styles si nécessaire
 });
 
 export default ProfileScreen;
