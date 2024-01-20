@@ -40,39 +40,18 @@ const SignUpScreen = ({ navigation }) => {
     try {
       const response = await axios.post(
         "http://192.168.0.222:3000/users/signup",
-        {
-          firstName,
-          lastName,
-          email,
-          password,
-        }
+        { firstName, lastName, email, password }
       );
-
-      console.log("Réponse du serveur :", response.data); // Log pour la réponse du serveur
-
-      // Vérification de la réponse du serveur
-      if (response.data && response.data.token && response.data._id) {
-        await AsyncStorage.setItem("userToken", response.data.token);
-        await AsyncStorage.setItem("userId", response.data._id);
-
-        console.log("Token et ID utilisateur stockés avec succès");
-        setIsRegistered(true);
-
-        // Naviguer vers le profil après un délai
-        setTimeout(() => {
-          navigation.navigate("Profile");
-        }, 3000);
-      } else {
-        Alert.alert("Erreur", "La réponse du serveur est incomplète.");
-      }
+      await AsyncStorage.setItem("userToken", response.data.token);
+      await AsyncStorage.setItem("userId", response.data._id.toString());
+      setIsRegistered(true);
+      navigation.navigate("Profile");
     } catch (error) {
       console.error(error);
-      Alert.alert(
-        "Erreur",
-        error.response && error.response.status === 409
-          ? "Cet e-mail est déjà utilisé."
-          : "Une erreur s'est produite lors de l'inscription."
-      );
+      const errorMessage = error.response
+        ? error.response.data.message
+        : error.message;
+      Alert.alert("Erreur d'inscription", errorMessage);
     }
   };
   return (

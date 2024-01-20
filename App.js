@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image, TouchableOpacity, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "./containers/HomeScreen";
 import ShowerChallenge from "./containers/ShowerChallenge";
@@ -20,6 +21,19 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function HomeStack() {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      if (userInfo) {
+        setIsUserLoggedIn(true);
+        setUserInfo(JSON.parse(userInfo));
+      }
+    };
+    checkUserLoggedIn();
+  }, []);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -27,14 +41,19 @@ function HomeStack() {
         component={HomeScreen}
         options={({ navigation }) => ({
           headerTitle: "Accueil",
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={{ marginLeft: 10 }}
-            >
-              <Text>Connexion</Text>
-            </TouchableOpacity>
-          ),
+          headerLeft: () =>
+            isUserLoggedIn && userInfo ? (
+              <View style={{ marginLeft: 10 }}>
+                <Text>{userInfo.username}</Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+                style={{ marginLeft: 10 }}
+              >
+                <Text>Connexion</Text>
+              </TouchableOpacity>
+            ),
         })}
       />
       <Stack.Screen
