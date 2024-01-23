@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../App";
 
 const SignUpScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
@@ -21,6 +22,8 @@ const SignUpScreen = ({ navigation }) => {
   const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  const { setIsUserLoggedIn } = useContext(AuthContext);
 
   const validateFields = () => {
     setFirstNameError(!firstName.trim());
@@ -43,8 +46,10 @@ const SignUpScreen = ({ navigation }) => {
         { firstName, lastName, email, password }
       );
       await AsyncStorage.setItem("userToken", response.data.token);
+      console.log("Token enregistré:", response.data.token); // Ajout du console.log ici
       await AsyncStorage.setItem("userId", response.data._id.toString());
       setIsRegistered(true);
+      setIsUserLoggedIn(true);
       navigation.navigate("Profile");
     } catch (error) {
       console.error(error);
@@ -54,6 +59,7 @@ const SignUpScreen = ({ navigation }) => {
       Alert.alert("Erreur d'inscription", errorMessage);
     }
   };
+
   return (
     <View style={styles.container}>
       {isRegistered ? (
