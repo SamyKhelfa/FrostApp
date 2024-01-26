@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../App"; // Assurez-vous que le chemin d'importation est correct
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const { setIsUserLoggedIn } = useContext(AuthContext);
 
   const validateFields = () => {
     setEmailError(!email.trim());
@@ -26,15 +30,23 @@ const LoginScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/users/login", {
-        email,
-        password,
-      });
-      console.log(response.data);
+      const response = await axios.post(
+        "http://192.168.0.222:3000/users/login",
+        {
+          email,
+          password,
+        }
+      );
+      await AsyncStorage.setItem("userToken", response.data.token);
+      await AsyncStorage.setItem("userId", response.data._id.toString());
+      setIsUserLoggedIn(true);
       navigation.navigate("Profile"); // Redirigez vers l'écran de profil après la connexion
     } catch (error) {
+      Alert.alert(
+        "Erreur de connexion",
+        "Utilisateur ou mot de passe incorrect."
+      );
       console.error(error);
-      // Ici, vous pouvez gérer les erreurs de connexion (par exemple, utilisateur/mot de passe incorrect)
     }
   };
 

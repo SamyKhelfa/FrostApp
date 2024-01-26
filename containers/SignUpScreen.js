@@ -46,7 +46,6 @@ const SignUpScreen = ({ navigation }) => {
         { firstName, lastName, email, password }
       );
       await AsyncStorage.setItem("userToken", response.data.token);
-      console.log("Token enregistré:", response.data.token); // Ajout du console.log ici
       await AsyncStorage.setItem("userId", response.data._id.toString());
       setIsRegistered(true);
       setIsUserLoggedIn(true);
