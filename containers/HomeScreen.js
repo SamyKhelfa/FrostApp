@@ -1,5 +1,12 @@
 import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Touchable,
+} from "react-native";
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -63,6 +70,10 @@ const HomeScreen = ({ navigation }) => {
             source={require("../images/academy.jpg")}
           ></Image>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("ChatScreen")}
+        ></TouchableOpacity>
       </View>
     </View>
   );

@@ -17,6 +17,7 @@ import CoursesScreen from "./containers/CoursesScreen";
 import LessonScreen from "./containers/LessonScreen";
 import LoginScreen from "./containers/LoginScreen";
 import SignUpScreen from "./containers/SignUpScreen";
+import ChatScreen from "./containers/ChatScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -96,6 +97,7 @@ function HomeStack() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
   );
 }
