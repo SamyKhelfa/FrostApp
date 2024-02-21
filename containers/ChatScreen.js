@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TextInput,
@@ -8,22 +8,25 @@ import {
   StyleSheet,
 } from "react-native";
 import io from "socket.io-client";
-
-let socket;
+import { AuthContext } from "../App"; // Importez AuthContext pour accéder à l'ID de l'utilisateur
 
 const ChatScreen = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const { userId } = useContext(AuthContext); // Utilisez l'ID de l'utilisateur connecté
 
   useEffect(() => {
     socket = io("http://192.168.0.222:3000");
 
+    // Connectez l'utilisateur à son salon personnel dès la connexion
     socket.on("connect", () => {
       console.log("Connecté au serveur de chat");
+      socket.emit("user_connected", userId); // Envoyez l'ID de l'utilisateur au serveur
     });
 
-    socket.on("chat message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+    // Écoutez les messages privés envoyés à cet utilisateur
+    socket.on("new_private_message", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data.message]);
     });
 
     return () => {
@@ -31,9 +34,14 @@ const ChatScreen = () => {
     };
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = (receiverId) => {
     if (message.trim()) {
-      socket.emit("chat message", message);
+      // Envoyez un message privé avec l'ID de l'émetteur, l'ID du destinataire et le message
+      socket.emit("private_message", {
+        senderId: userId,
+        receiverId, // Vous devez définir comment obtenir l'ID du destinataire
+        message,
+      });
       setMessage("");
     }
   };
@@ -56,7 +64,10 @@ const ChatScreen = () => {
           onChangeText={setMessage}
           placeholder="Type your message here..."
         />
-        <Button title="Send" onPress={sendMessage} />
+        <Button
+          title="Send"
+          onPress={() => sendMessage(/* ID du destinataire ici */)}
+        />
       </View>
     </View>
   );
