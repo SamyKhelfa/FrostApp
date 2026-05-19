@@ -7,11 +7,13 @@ import LogoutIcon from "@/assets/images/logout.svg"
 import ProfileIcon from "@/assets/images/profile.svg"
 import PasswordIcon from "@/assets/images/password.svg"
 import { Colors } from "@/constants/colors";
+import { useAuth } from "@/contexts/AuthContext";
 
 const FLOATING_TAB_BAR_CONTENT_PAD = 96;
 
 export default function Profile() {
     const insets = useSafeAreaInsets();
+    const { logout } = useAuth();
     const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
     return (
         <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingBottom: bottomPad }]}>
@@ -53,7 +55,7 @@ export default function Profile() {
             <ProfileRow
                 icon={<LogoutIcon width={20} height={20} fill={Colors.snow} />}
                 label="Se déconnecter"
-                onPress={() => router.push("/logout")}
+                onPress={logout}
                 variant="danger"
             />
 

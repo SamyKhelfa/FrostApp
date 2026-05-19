@@ -1,16 +1,38 @@
 import { useState } from "react";
+import { StyleSheet, Text } from "react-native";
 
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import { Colors } from "@/constants/colors";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Register() {
+  const { register } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleRegister = () => {
-    console.log({ name, email, password });
+  const handleRegister = async () => {
+    setError(null);
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setError("Tous les champs sont requis.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Le mot de passe doit faire au moins 6 caractères.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await register(name.trim(), email.trim(), password);
+    } catch {
+      setError("Création du compte impossible pour l'instant.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -45,7 +67,20 @@ export default function Register() {
         placeholder="••••••••"
         secureTextEntry
       />
-      <AuthButton label="CRÉER MON COMPTE" onPress={handleRegister} />
+      {error && <Text style={styles.error}>{error}</Text>}
+      <AuthButton
+        label={submitting ? "CRÉATION…" : "CRÉER MON COMPTE"}
+        onPress={handleRegister}
+      />
     </AuthLayout>
   );
 }
+
+const styles = StyleSheet.create({
+  error: {
+    color: Colors.danger,
+    fontSize: 13,
+    textAlign: "center",
+    marginTop: -4,
+  },
+});
