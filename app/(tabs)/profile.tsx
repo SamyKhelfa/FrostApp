@@ -1,9 +1,11 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
 import {ProfileRow} from "@/components/profile/ProfileRow";
 import {ProfileAvatar} from "@/components/profile/ProfileAvatar";
 import LogoutIcon from "@/assets/images/logout.svg"
 import ProfileIcon from "@/assets/images/profile.svg"
+import PasswordIcon from "@/assets/images/password.svg"
+import { Colors } from "@/constants/colors";
 
 export default function Profile() {
     return (
@@ -14,22 +16,40 @@ export default function Profile() {
                 }}
             />
             <ProfileRow
-                icon={<ProfileIcon width={24} height={24} fill="#0E2645"/> }
+                icon={<ProfileIcon width={24} height={24} fill={Colors.navy}/> }
                 label="Modifier le profil"
                 onPress={() => router.push("/edit-profile")}
             />
 
             <ProfileRow
-                icon="🔒"
+                icon={<PasswordIcon width={24} height={24} fill={Colors.navy} />}
                 label="Modifier le mot de passe"
                 onPress={() => router.push("/change-password")}
             />
 
             <ProfileRow
-                icon={<LogoutIcon width={20} height={20} fill="#FFFFFF" />}
+                icon={<Text style={styles.emojiIcon}>💳</Text>}
+                label="Abonnement"
+                onPress={() => router.push("/subscription")}
+            />
+
+            <ProfileRow
+                icon={<Text style={styles.emojiIcon}>📄</Text>}
+                label="Termes et conditions"
+                onPress={() => router.push("/terms")}
+            />
+
+            <ProfileRow
+                icon={<Text style={styles.emojiIcon}>🔐</Text>}
+                label="Politique de confidentialité"
+                onPress={() => router.push("/privacy")}
+            />
+
+            <ProfileRow
+                icon={<LogoutIcon width={20} height={20} fill={Colors.snow} />}
                 label="Se déconnecter"
                 onPress={() => router.push("/logout")}
-                variant="primary"
+                variant="danger"
             />
 
         </ScrollView>
@@ -39,17 +59,13 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#0E2645",
+        backgroundColor: Colors.navy,
     },
     content: {
         padding: 24,
         paddingTop: 60,
     },
-    topBar: {
-        // ...
-    },
-    backArrow: {
-        color: "white",
-        fontSize: 28,
+    emojiIcon: {
+        fontSize: 20,
     },
 });

@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 
+import { Colors } from "@/constants/colors";
+
 type Props = {
   label: string;
   onPress: () => void;
@@ -19,12 +21,9 @@ export function AuthButton({ label, onPress }: Props) {
   );
 }
 
-const NAVY = "#15375E";
-const SNOW_WHITE = "#FFFFFA";
-
 const styles = StyleSheet.create({
   cta: {
-    backgroundColor: SNOW_WHITE,
+    backgroundColor: Colors.snow,
     paddingVertical: 18,
     borderRadius: 4,
     alignItems: "center",
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   ctaText: {
-    color: NAVY,
+    color: Colors.navyAccent,
     fontSize: 13,
     fontWeight: "700",
     letterSpacing: 2.5,

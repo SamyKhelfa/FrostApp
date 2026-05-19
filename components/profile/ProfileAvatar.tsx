@@ -1,5 +1,7 @@
 import {Image, Pressable, StyleSheet, Text, View} from "react-native";
 
+import { Colors } from "@/constants/colors";
+
 type Props = {
     uri: string;
     onEdit: () => void;
@@ -38,14 +40,14 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 18,
-        backgroundColor: "#15375E",
+        backgroundColor: Colors.navyAccent,
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
-        borderColor: "#FFFFFF",
+        borderColor: Colors.snow,
     },
     editIcon: {
-        color: "#FFFFFF",
+        color: Colors.snow,
         fontSize: 16,
         fontWeight: "700",
         marginTop: -2,

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { Screen } from "@/components/screen/Screen";
+import { Colors } from "@/constants/colors";
 
 import { LESSONS, type Chapter, type Lesson } from "@/data/lessons.mock";
 
@@ -115,11 +116,11 @@ export default function HomeScreen() {
   );
 }
 
-const NAVY = "#1A395D";
-const ICE = "#B8D4F0";
+const NAVY = Colors.navyAccent;
+const ICE = Colors.ice;
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#0E2645" },
+  screen: { flex: 1, backgroundColor: Colors.navy },
   list: { paddingVertical: 20 },
   separator: { height: 16 },
 

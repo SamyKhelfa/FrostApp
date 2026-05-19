@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 
+import { Colors } from "@/constants/colors";
+
 type Props = {
   eyebrow: string;
   title: string;
@@ -38,16 +40,12 @@ export function AuthLayout({ eyebrow, title, children, footer }: Props) {
   );
 }
 
-const NAVY_DEEP = "#0E2645";
-const SNOW_WHITE = "#FFFFFF";
-const ICE = "#B8D4F0";
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: NAVY_DEEP,
+    backgroundColor: Colors.navy,
     padding: 24,
   },
   content: {
@@ -61,21 +59,21 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   logo: {
-    color: SNOW_WHITE,
+    color: Colors.snow,
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: 8,
     marginBottom: 12,
   },
   eyebrow: {
-    color: ICE,
+    color: Colors.ice,
     fontSize: 11,
     fontWeight: "600",
     letterSpacing: 5,
     opacity: 0.7,
   },
   title: {
-    color: SNOW_WHITE,
+    color: Colors.snow,
     fontSize: 26,
     fontWeight: "300",
     fontStyle: "italic",
@@ -92,12 +90,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   footerLinkMuted: {
-    color: ICE,
+    color: Colors.ice,
     fontSize: 14,
     opacity: 0.7,
   },
   footerLinkAccent: {
-    color: SNOW_WHITE,
+    color: Colors.snow,
     fontSize: 14,
     fontWeight: "700",
     textDecorationLine: "underline",

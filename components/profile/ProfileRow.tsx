@@ -1,6 +1,8 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import {ReactNode} from "react";
 
+import { Colors } from "@/constants/colors";
+
 type Variant = "default" | "primary" | "danger";
 
 type Props = {
@@ -12,6 +14,8 @@ type Props = {
 
 export function ProfileRow({icon, label, onPress, variant = "default"}: Props) {
     const isPrimary = variant === "primary";
+    const isDanger = variant === "danger";
+    const isSolid = isPrimary || isDanger;
 
     return (
         <Pressable
@@ -19,14 +23,20 @@ export function ProfileRow({icon, label, onPress, variant = "default"}: Props) {
             style={({pressed}) => [
                 styles.row,
                 isPrimary && styles.rowPrimary,
+                isDanger && styles.rowDanger,
                 pressed && styles.rowPressed,
             ]}
         >
             <View style={styles.iconWrap}>{icon}</View>
-            <Text style={[styles.label, isPrimary && styles.labelPrimary]}>
+            <Text
+                style={[
+                    styles.label,
+                    isSolid && styles.labelSolid,
+                ]}
+            >
                 {label}
             </Text>
-            {!isPrimary && (
+            {!isSolid && (
                 <View style={styles.arrowCircle}>
                     <Text style={styles.arrow}>›</Text>
                 </View>
@@ -35,13 +45,11 @@ export function ProfileRow({icon, label, onPress, variant = "default"}: Props) {
     )
 }
 
-const NAVY = "#15375E";
-
 const styles = StyleSheet.create({
     row: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: Colors.snow,
         borderRadius: 14,
         paddingVertical: 14,
         paddingHorizontal: 18,
@@ -62,6 +70,18 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 6 },
         elevation: 6,
     },
+    rowDanger: {
+        backgroundColor: Colors.danger,
+        justifyContent: "center",
+        paddingVertical: 12,
+        marginHorizontal: 40,
+        marginTop: 20,
+        shadowColor: Colors.danger,
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 6,
+    },
     rowPressed: {
         opacity: 0.85,
         transform: [{ scale: 0.99 }],
@@ -74,13 +94,13 @@ const styles = StyleSheet.create({
     },
     label: {
         flex: 1,
-        color: NAVY,
+        color: Colors.navyAccent,
         fontSize: 15,
         fontWeight: "600",
     },
-    labelPrimary: {
+    labelSolid: {
         flex: 0,
-        color: "#FFFFFF",
+        color: Colors.snow,
         fontSize: 16,
         fontWeight: "700",
         letterSpacing: 0.5,
@@ -89,12 +109,12 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: NAVY,
+        backgroundColor: Colors.navyAccent,
         alignItems: "center",
         justifyContent: "center",
     },
     arrow: {
-        color: "#FFFFFF",
+        color: Colors.snow,
         fontSize: 18,
         fontWeight: "700",
         marginTop: -2,
