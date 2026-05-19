@@ -9,6 +9,7 @@ import {
   UIManager,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Screen } from "@/components/screen/Screen";
 import { Colors } from "@/constants/colors";
@@ -102,13 +103,18 @@ function LessonItem({ lesson }: { lesson: Lesson }) {
   );
 }
 
+const FLOATING_TAB_BAR_CONTENT_PAD = 96; // pill + padding, excluding safe area
+
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
+
   return (
     <Screen style={styles.screen} paddingHorizontal>
       <FlatList
         data={LESSONS}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[styles.list, { paddingBottom: bottomPad }]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item }) => <LessonItem lesson={item} />}
       />

@@ -1,23 +1,17 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform, StyleSheet } from "react-native";
 
-import { HapticTab } from "@/components/haptic-tab";
+import { FloatingTabBar } from "@/components/ui/FloatingTabBar";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import ProfileIcon from "@/assets/images/profile.svg";
-import { Alpha, Colors } from "@/constants/colors";
 
 export default function TabLayout() {
   return (
     <Tabs
+      tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarActiveTintColor: Colors.snow,
-        tabBarInactiveTintColor: Colors.muted,
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: styles.tabBarLabel,
-        tabBarItemStyle: styles.tabBarItem,
+        tabBarStyle: { position: "absolute" },
       }}
     >
       <Tabs.Screen
@@ -26,7 +20,7 @@ export default function TabLayout() {
           title: "Accueil",
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
-              size={focused ? 26 : 24}
+              size={focused ? 22 : 22}
               name="house.fill"
               color={color}
             />
@@ -37,12 +31,8 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: "Explorer",
-          tabBarIcon: ({ color, focused }) => (
-            <IconSymbol
-              size={focused ? 26 : 24}
-              name="paperplane.fill"
-              color={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={22} name="paperplane.fill" color={color} />
           ),
         }}
       />
@@ -50,12 +40,8 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profil",
-          tabBarIcon: ({ color, focused }) => (
-            <ProfileIcon
-              width={focused ? 26 : 24}
-              height={focused ? 26 : 24}
-              fill={color}
-            />
+          tabBarIcon: ({ color }) => (
+            <ProfileIcon width={22} height={22} fill={color} />
           ),
         }}
       />
@@ -65,29 +51,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: Colors.navy,
-    borderTopWidth: 1,
-    borderTopColor: Alpha.iceBorder12,
-    height: Platform.OS === "ios" ? 88 : 68,
-    paddingTop: 8,
-    paddingBottom: Platform.OS === "ios" ? 28 : 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 12,
-  },
-  tabBarLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    letterSpacing: 1,
-    textTransform: "uppercase",
-    marginTop: 2,
-  },
-  tabBarItem: {
-    paddingVertical: 4,
-  },
-});

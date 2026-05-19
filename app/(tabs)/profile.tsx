@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {ProfileRow} from "@/components/profile/ProfileRow";
 import {ProfileAvatar} from "@/components/profile/ProfileAvatar";
 import LogoutIcon from "@/assets/images/logout.svg"
@@ -7,9 +8,13 @@ import ProfileIcon from "@/assets/images/profile.svg"
 import PasswordIcon from "@/assets/images/password.svg"
 import { Colors } from "@/constants/colors";
 
+const FLOATING_TAB_BAR_CONTENT_PAD = 96;
+
 export default function Profile() {
+    const insets = useSafeAreaInsets();
+    const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingBottom: bottomPad }]}>
             <ProfileAvatar
                 uri="https://maximefrost.fr/wp-content/uploads/2024/06/Maxime-Frost-Presensation-Stage-Givre.jpg"
                 onEdit={() => {
