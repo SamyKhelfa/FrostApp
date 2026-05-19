@@ -120,7 +120,7 @@ const NAVY = Colors.navyAccent;
 const ICE = Colors.ice;
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: Colors.navy },
+  screen: { flex: 1, backgroundColor: Colors.appBg },
   list: { paddingVertical: 20 },
   separator: { height: 16 },
 

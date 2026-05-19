@@ -23,14 +23,14 @@ export function AuthButton({ label, onPress }: Props) {
 
 const styles = StyleSheet.create({
   cta: {
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.navyAccent,
     paddingVertical: 18,
     borderRadius: 4,
     alignItems: "center",
     marginTop: 12,
-    shadowColor: "#000",
+    shadowColor: Colors.navyDeep,
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.18,
     shadowRadius: 16,
     elevation: 8,
   },
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   ctaText: {
-    color: Colors.navyAccent,
+    color: Colors.snow,
     fontSize: 13,
     fontWeight: "700",
     letterSpacing: 2.5,

@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
-import { Alpha, Colors } from "@/constants/colors";
+import { Colors } from "@/constants/colors";
 
 const FREE_FEATURES = [
   "Accès aux 2 premiers programmes",
@@ -75,7 +75,7 @@ export default function Subscription() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.navy,
+    backgroundColor: Colors.appBg,
   },
   content: {
     padding: 24,
@@ -85,22 +85,21 @@ const styles = StyleSheet.create({
 
   // Current plan
   currentCard: {
-    backgroundColor: Alpha.white06,
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: Alpha.iceBorder20,
+    borderColor: Colors.borderLight,
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
   },
   currentLabel: {
-    color: Colors.ice,
+    color: Colors.muted,
     fontSize: 11,
     letterSpacing: 2,
     fontWeight: "700",
-    opacity: 0.7,
   },
   currentPlan: {
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 28,
     fontWeight: "300",
     fontStyle: "italic",
@@ -110,12 +109,12 @@ const styles = StyleSheet.create({
 
   // Premium plan
   premiumCard: {
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 22,
-    shadowColor: Colors.ice,
+    shadowColor: Colors.navyDeep,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.12,
     shadowRadius: 16,
     elevation: 10,
   },
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   featureItem: {
-    color: Colors.ice,
+    color: Colors.mutedDark,
     fontSize: 13.5,
     lineHeight: 19,
   },

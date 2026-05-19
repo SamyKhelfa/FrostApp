@@ -68,7 +68,7 @@ export default function ChangePassword() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.navy,
+    backgroundColor: Colors.appBg,
   },
   content: {
     padding: 24,
@@ -76,10 +76,9 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
   intro: {
-    color: Colors.ice,
+    color: Colors.mutedDark,
     fontSize: 13,
     lineHeight: 19,
-    opacity: 0.8,
     marginBottom: 24,
     fontStyle: "italic",
   },

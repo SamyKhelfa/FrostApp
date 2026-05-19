@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 
-import { Alpha, Colors } from "@/constants/colors";
+import { Colors } from "@/constants/colors";
 
 type Props = {
   title: string;
@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Alpha.iceBorder25,
+    borderColor: Colors.borderLight,
     alignItems: "center",
     justifyContent: "center",
   },
   backArrow: {
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 24,
     fontWeight: "300",
     marginTop: -3,
@@ -59,14 +59,14 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   eyebrow: {
-    color: Colors.ice,
+    color: Colors.muted,
     fontSize: 11,
     fontWeight: "600",
     letterSpacing: 5,
-    opacity: 0.7,
+    opacity: 0.9,
   },
   title: {
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 30,
     fontWeight: "300",
     fontStyle: "italic",

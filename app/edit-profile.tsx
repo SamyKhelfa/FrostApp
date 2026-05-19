@@ -52,7 +52,7 @@ export default function EditProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.navy,
+    backgroundColor: Colors.appBg,
   },
   content: {
     padding: 24,

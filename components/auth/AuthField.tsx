@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
 
-import { Alpha, Colors } from "@/constants/colors";
+import { Colors } from "@/constants/colors";
 
 type Props = TextInputProps & {
   label: string;
@@ -24,21 +24,20 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    color: Colors.ice,
+    color: Colors.muted,
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 2,
     textTransform: "uppercase",
-    opacity: 0.8,
   },
   input: {
-    backgroundColor: Alpha.white06,
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: Alpha.iceBorder20,
+    borderColor: Colors.borderLight,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 15,
   },
 });

@@ -65,7 +65,7 @@ export default function Privacy() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.navy,
+    backgroundColor: Colors.appBg,
   },
   content: {
     padding: 24,
@@ -73,14 +73,13 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
   lastUpdate: {
-    color: Colors.ice,
+    color: Colors.mutedSoft,
     fontSize: 12,
     fontStyle: "italic",
-    opacity: 0.6,
     marginBottom: 16,
   },
   intro: {
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 14,
     lineHeight: 21,
     fontStyle: "italic",
@@ -93,23 +92,21 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   sectionTitle: {
-    color: Colors.snow,
+    color: Colors.navyAccent,
     fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0.3,
   },
   sectionBody: {
-    color: Colors.ice,
+    color: Colors.mutedDark,
     fontSize: 13.5,
     lineHeight: 21,
-    opacity: 0.85,
   },
   footer: {
-    color: Colors.ice,
+    color: Colors.mutedSoft,
     fontSize: 12,
     fontStyle: "italic",
     textAlign: "center",
     marginTop: 36,
-    opacity: 0.6,
   },
 });

@@ -7,18 +7,22 @@
  */
 
 export const Colors = {
-  // ─── Navy palette (backgrounds & primary text on light bg) ───
-  navy: "#1A3553",            // main background
-  navyAccent: "#1F4368",      // text on white, button bg, icons
+  // ─── Navy palette (navbar bg + dark text/icons on light bg) ──
+  navy: "#1A3553",            // navbar background only
+  navyAccent: "#1F4368",      // primary text, button bg, icons
   navyDeep: "#15314D",        // even deeper for shadows / pressed states
 
-  // ─── Light tones (text & accents on dark bg) ─────────────────
-  snow: "#FFFFFF",            // primary text on navy
-  ice: "#B8D4F0",             // labels, secondary text, ice elements
+  // ─── App backgrounds (light) ─────────────────────────────────
+  appBg: "#EEF3FA",           // main screen background
+  surface: "#FFFFFF",         // cards, inputs
+
+  // ─── Light tones (still used inside navbar) ──────────────────
+  snow: "#FFFFFF",            // text on navy navbar / dark buttons
+  ice: "#B8D4F0",             // navbar inactive accents
 
   // ─── Muted greys (placeholders & helper texts) ───────────────
-  muted: "#5B7A99",           // placeholders, inactive tab icons
-  mutedDark: "#445A77",       // descriptions on white cards
+  muted: "#5B7A99",           // placeholders, inactive tab icons, labels
+  mutedDark: "#445A77",       // body text on light bg
   mutedSoft: "#8294AD",       // very subtle helper text
   mutedDate: "#9AA8BC",       // dates, fineprint
 
@@ -27,7 +31,7 @@ export const Colors = {
   dangerLight: "#E47585",     // error messages
 
   // ─── Borders & subtle UI ─────────────────────────────────────
-  borderLight: "#E6EBF2",     // dividers on white cards
+  borderLight: "#E6EBF2",     // dividers / input borders on light bg
   iceLight: "#F2F6FB",        // very light tint backgrounds
   iceBorder: "#D4E2F2",       // borders for subchapter indents
 };
