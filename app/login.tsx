@@ -6,6 +6,7 @@ import { AuthField } from "@/components/auth/AuthField";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Colors } from "@/constants/colors";
 import { useAuth } from "@/contexts/AuthContext";
+import {API_URL} from "../lib/api";
 
 export default function Login() {
   const { login } = useAuth();
@@ -23,12 +24,14 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email.trim(), password);
-    } catch {
-      setError("Connexion impossible pour l'instant.");
+    } catch (e: any){
+      setError(e.message || "Connexion impossible pour l'instant.");
     } finally {
       setSubmitting(false);
     }
   };
+
+
 
   return (
     <AuthLayout
