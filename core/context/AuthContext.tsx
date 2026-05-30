@@ -8,13 +8,8 @@ import {
   useState,
 } from "react";
 
-import {loginRequest, registerRequest} from "@/lib/auth.service";
-import type {IUser} from "@/types/auth";
-
-//export type AuthUser = {
-//  name: string;
- // email: string;
-//};
+import { loginRequest, registerRequest } from "@/lib/auth.service";
+import type { IUser } from "@/types/auth";
 
 type AuthContextValue = {
   user: IUser | null;
@@ -33,29 +28,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const router = useRouter();
 
-  const login = useCallback(async (email: string, password: string) => {
-    setIsLogging(true);
-    try {
-      const { user: userResponse } = await loginRequest({ email, password });
-      setUser(userResponse);
-      router.replace("/");
-    } finally {
-      setIsLogging(false);
-    }
-  }, [router]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      setIsLogging(true);
+      try {
+        const { user: userResponse } = await loginRequest({ email, password });
+        setUser(userResponse);
+        router.replace("/");
+      } finally {
+        setIsLogging(false);
+      }
+    },
+    [router]
+  );
 
   const register = useCallback(
-      async (name: string, email: string, password: string) => {
-        setIsLogging(true);
-        try {
-          const { user: userResponse } = await registerRequest({ name, email, password });
-          setUser(userResponse);
-          router.replace("/");
-        } finally {
-          setIsLogging(false);
-        }
-      },
-      [router]
+    async (name: string, email: string, password: string) => {
+      setIsLogging(true);
+      try {
+        const { user: userResponse } = await registerRequest({
+          name,
+          email,
+          password,
+        });
+        setUser(userResponse);
+        router.replace("/");
+      } finally {
+        setIsLogging(false);
+      }
+    },
+    [router]
   );
 
   const logout = useCallback(() => {
@@ -64,15 +66,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   const value = useMemo<AuthContextValue>(
-      () => ({
-        user,
-        isAuthenticated: !!user,
-        isLogging,
-        login,
-        register,
-        logout,
-      }),
-      [user, isLogging, login, register, logout]
+    () => ({
+      user,
+      isAuthenticated: !!user,
+      isLogging,
+      login,
+      register,
+      logout,
+    }),
+    [user, isLogging, login, register, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -7,7 +7,7 @@ import LogoutIcon from "@/assets/images/logout.svg"
 import ProfileIcon from "@/assets/images/profile.svg"
 import PasswordIcon from "@/assets/images/password.svg"
 import { Colors } from "@/constants/colors";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/core/context/AuthContext";
 
 const FLOATING_TAB_BAR_CONTENT_PAD = 96;
 

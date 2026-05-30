@@ -9,7 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/core/context/AuthContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export const unstable_settings = {

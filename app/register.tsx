@@ -5,7 +5,7 @@ import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Colors } from "@/constants/colors";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/core/context/AuthContext";
 
 export default function Register() {
   const { register } = useAuth();
