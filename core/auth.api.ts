@@ -1,1 +1,0 @@
-import {ILoginPayload} from "@/types/auth";

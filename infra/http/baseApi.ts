@@ -1,3 +1,4 @@
+import * as SecureStore from "expo-secure-store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const IS_DEV = true;
@@ -30,9 +31,8 @@ const baseQueryWithReauth =
                 !isAuthLogin &&
                 (result?.error?.status === 401 || result?.error?.status === 403)
             ) {
-                localStorage.removeItem("auth-token");
-                localStorage.removeItem("user");
-                // window.location.reload();
+                await SecureStore.deleteItemAsync("auth-token");
+                await SecureStore.deleteItemAsync("user");
             }
 
             return result;
@@ -44,7 +44,7 @@ export const emptySplitApi = createApi({
         baseUrl: apiUrl,
         prepareHeaders: async (headers: Headers) => {
             try {
-                const authToken = JSON.parse(localStorage.getItem("auth-token") || "");
+                const authToken = await SecureStore.getItemAsync("auth-token");
 
                 if (authToken) {
                     headers.set("Authorization", `Bearer ${authToken}`);
@@ -53,6 +53,7 @@ export const emptySplitApi = createApi({
                 return headers;
             } catch (err) {
                 console.log(err);
+                return headers;
             }
         },
     }),

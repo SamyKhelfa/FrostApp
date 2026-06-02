@@ -11,6 +11,9 @@ import "react-native-reanimated";
 
 import { AuthProvider, useAuth } from "@/core/context/AuthContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import {Provider} from "react-redux";
+import { store } from "@/core/redux";
+
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -42,7 +45,9 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <AuthProvider>
+      <Provider store={store}>
+
+      <AuthProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
@@ -58,5 +63,7 @@ export default function RootLayout() {
         <StatusBar style="auto" />
       </ThemeProvider>
     </AuthProvider>
+      </Provider>
+
   );
 }
