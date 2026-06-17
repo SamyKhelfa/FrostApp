@@ -13,8 +13,8 @@ const defaultPaginationParams = {
 
 export const lessonApi = emptySplitApi.injectEndpoints({
     endpoints: (builder) => ({
-        getLessons: builder.query<
-        PaginatedResult<ILesson>,
+        getLesson: builder.query<
+            PaginatedResult<ILesson>,
             PaginationParams | void
         >({
             query: (arg) => {
@@ -22,19 +22,20 @@ export const lessonApi = emptySplitApi.injectEndpoints({
                 const limit = arg?.limit ?? defaultPaginationParams.limit
                 const enablePagination = arg?.enablePagination ?? defaultPaginationParams.enablePagination
 
-                return {url:"/lessons",
-                method: "GET",
-                params: {page, limit, enablePagination},
+                return {
+                    url: "/lessons",
+                    method: "GET",
+                    params: {page, limit, enablePagination},
                 }
             }
         }),
-        getLessonsById: builder.query<ILesson, string>({
-            query: (id: string) => ({
-                url: `/lesson/${id}`,
+        getLessonById: builder.query<ILesson, number>({
+            query: (id) => ({
+                url: `/lessons/${id}`,
                 method: "GET",
             })
         })
     })
 })
 
-export const {useGetLessonsQuery, useGetLessonsByIdQuery} = lessonApi
+export const {useGetLessonQuery, useGetLessonByIdQuery} = lessonApi
