@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {useGetLessonsQuery} from "@/core/api";
 import {
   FlatList,
   LayoutAnimation,
@@ -14,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Screen } from "@/components/screen/Screen";
 import { Colors } from "@/constants/colors";
 
-import { LESSONS, type Chapter, type Lesson } from "@/data/lessons.mock";
+import { type Chapter, type Lesson } from "@/data/lessons.mock";
 
 // Enable LayoutAnimation on Android
 if (
@@ -65,41 +66,12 @@ function ChapterItem({ chapter }: { chapter: Chapter }) {
   );
 }
 
-function LessonItem({ lesson }: { lesson: Lesson }) {
-  const [chaptersOpen, setChaptersOpen] = useState(false);
-
-  const toggleChapters = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setChaptersOpen((v) => !v);
-  };
-
+function LessonItem({ lesson }: { lesson: { id: number; title: string; description: string } }) {
   return (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>{lesson.title}</Text>
-      <Text style={styles.cardDescription}>{lesson.description}</Text>
-
-      <Pressable onPress={toggleChapters} style={styles.chaptersHeader}>
-        <Text style={styles.chaptersLabel}>
-          Chapitres ({lesson.chapters.length})
-        </Text>
-        <Text style={[styles.chevron, chaptersOpen && styles.chevronOpen]}>
-          ›
-        </Text>
-      </Pressable>
-
-      {chaptersOpen && (
-        <View style={styles.chaptersBlock}>
-          <FlatList
-            data={lesson.chapters}
-            keyExtractor={(chapter) => chapter.id.toString()}
-            scrollEnabled={false}
-            renderItem={({ item: chapter }) => (
-              <ChapterItem chapter={chapter} />
-            )}
-          />
-        </View>
-      )}
-    </View>
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{lesson.title}</Text>
+        <Text style={styles.cardDescription}>{lesson.description}</Text>
+      </View>
   );
 }
 
@@ -109,16 +81,39 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
 
+  const {data, isLoading, error} = useGetLessonsQuery();
+
+
+  if (isLoading) {
+    return (
+        <Screen style={styles.screen} paddingHorizontal>
+          <Text style={{ color: Colors.navyAccent, padding: 20 }}>
+            Chargement…
+          </Text>
+        </Screen>
+    );
+  }
+
+  if (error) {
+    return (
+        <Screen style={styles.screen} paddingHorizontal>
+          <Text style={{ color: Colors.danger, padding: 20 }}>
+            Erreur de chargement des cours.
+          </Text>
+        </Screen>
+    );
+  }
+
   return (
-    <Screen style={styles.screen} paddingHorizontal>
-      <FlatList
-        data={LESSONS}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={[styles.list, { paddingBottom: bottomPad }]}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={({ item }) => <LessonItem lesson={item} />}
-      />
-    </Screen>
+      <Screen style={styles.screen} paddingHorizontal>
+        <FlatList
+            data={data?.data ?? []}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={[styles.list, { paddingBottom: bottomPad }]}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            renderItem={({ item }) => <LessonItem lesson={item} />}
+        />
+      </Screen>
   );
 }
 
