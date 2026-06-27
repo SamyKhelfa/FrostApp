@@ -40,6 +40,7 @@ const baseQueryWithReauth =
 
 export const emptySplitApi = createApi({
     reducerPath: "api",
+    tagTypes: ["Me"],
     baseQuery: baseQueryWithReauth({
         baseUrl: apiUrl,
         prepareHeaders: async (headers: Headers) => {

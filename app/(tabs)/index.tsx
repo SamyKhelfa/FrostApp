@@ -90,7 +90,7 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <Screen style={styles.screen} paddingHorizontal>
+      <Screen style={styles.screen}>
         <Text style={{ color: Colors.navyAccent, padding: 20 }}>
           Chargement…
         </Text>
@@ -100,7 +100,7 @@ export default function HomeScreen() {
 
   if (error) {
     return (
-      <Screen style={styles.screen} paddingHorizontal>
+      <Screen style={styles.screen}>
         <Text style={{ color: Colors.danger, padding: 20 }}>
           Erreur de chargement des cours.
         </Text>
@@ -109,7 +109,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <Screen style={styles.screen} paddingHorizontal>
+    <Screen style={styles.screen}>
       <FlatList
         data={data?.data ?? []}
         keyExtractor={(item) => item.id.toString()}
@@ -126,7 +126,10 @@ const ICE = Colors.ice;
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.appBg },
-  list: { paddingVertical: 20 },
+  list: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,   // 👈 padding déplacé ici
+  },
   separator: { height: 16 },
 
   card: {

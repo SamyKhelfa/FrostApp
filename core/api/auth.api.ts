@@ -8,6 +8,7 @@ export const authApi = emptySplitApi.injectEndpoints?.({
                 url: "/auth/me",
                 method: "GET",
             }),
+            providesTags: ["Me"],
         }),
         login: builder.mutation<ILoginResponse, ILoginPayload>({
             query: (body: ILoginPayload) => ({

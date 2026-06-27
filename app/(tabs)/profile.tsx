@@ -13,14 +13,16 @@ const FLOATING_TAB_BAR_CONTENT_PAD = 96;
 
 export default function Profile() {
     const insets = useSafeAreaInsets();
+    const {user} = useAuth();
+
     const { logout } = useAuth();
     const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
     return (
         <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingBottom: bottomPad }]}>
             <ProfileAvatar
-                uri="https://maximefrost.fr/wp-content/uploads/2024/06/Maxime-Frost-Presensation-Stage-Givre.jpg"
-                onEdit={() => {
-                }}
+                uri={user?.avatar}
+                name={user?.name}
+                onEdit={() => {}}
             />
             <ProfileRow
                 icon={<ProfileIcon width={24} height={24} fill={Colors.navy}/> }

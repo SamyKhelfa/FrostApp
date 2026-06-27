@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await SecureStore.setItemAsync(TOKEN_KEY, authToken);
             setToken(authToken);
             setUser(userResponse);
-            router.replace("/");
+            router.replace("/(tabs)");
         },
         [router, loginMutation]
     );
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await SecureStore.setItemAsync(TOKEN_KEY, authToken);
             setToken(authToken);
             setUser(userResponse);
-            router.replace("/");
+            router.replace("/(tabs)");
         },
         [router, registerMutation]
     );
