@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { router } from "expo-router";
 
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthField } from "@/components/auth/AuthField";
@@ -23,8 +24,18 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email.trim(), password);
-    } catch {
-      setError("Connexion impossible pour l'instant.");
+    } catch (e: any) {
+      const status = e?.status ?? e?.data?.statusCode;
+
+      if (status === 401) {
+        setError("Email ou mot de passe incorrect.");
+      } else if (status === "FETCH_ERROR") {
+        setError("Impossible de joindre le serveur. Vérifie ta connexion.");
+      } else if (status === 400) {
+        setError("Format invalide. Vérifie ton email.");
+      } else {
+        setError("Connexion impossible pour l'instant.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -56,6 +67,15 @@ export default function Login() {
         placeholder="••••••••"
         secureTextEntry
       />
+
+      <Pressable
+        onPress={() => router.push("/forgot-password")}
+        hitSlop={10}
+        style={styles.forgotWrap}
+      >
+        <Text style={styles.forgotLink}>Mot de passe oublié ?</Text>
+      </Pressable>
+
       {error && <Text style={styles.error}>{error}</Text>}
       <AuthButton
         label={submitting ? "CONNEXION…" : "SE CONNECTER"}
@@ -66,6 +86,16 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
+  forgotWrap: {
+    alignSelf: "flex-end",
+    marginTop: -8,
+  },
+  forgotLink: {
+    color: Colors.navyAccent,
+    fontSize: 13,
+    fontStyle: "italic",
+    textDecorationLine: "underline",
+  },
   error: {
     color: Colors.danger,
     fontSize: 13,

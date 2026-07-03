@@ -40,7 +40,8 @@ function AuthGate() {
     if (isInitializing || isLogging) return;
 
     const first = segments[0];
-    const inAuthRoute = first === "login" || first === "register";
+    const inAuthRoute =
+      first === "login" || first === "register" || first === "forgot-password";
 
     if (!isAuthenticated && !inAuthRoute) {
       router.replace("/login");
@@ -70,6 +71,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="login" />
             <Stack.Screen name="register" />
+            <Stack.Screen name="forgot-password" />
             <Stack.Screen name="edit-profile" />
             <Stack.Screen name="change-password" />
             <Stack.Screen name="subscription" />

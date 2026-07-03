@@ -6,6 +6,7 @@ import { AuthField } from "@/components/auth/AuthField";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { Colors } from "@/constants/colors";
 import { useChangePasswordMutation } from "@/core/api";
+import {router} from "expo-router";
 
 export default function ChangePassword() {
   const [changePassword, { isLoading }] = useChangePasswordMutation();
@@ -32,6 +33,7 @@ export default function ChangePassword() {
     try {
       await changePassword({ currentPassword, newPassword }).unwrap();
       setSuccess(true);
+      setTimeout(() => router.back(), 1000);
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

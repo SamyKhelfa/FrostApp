@@ -30,6 +30,15 @@ export const userApi = emptySplitApi.injectEndpoints({
                 body
             }),
         }),
+        uploadAvatar: builder.mutation<IUser, FormData>({
+            query: (formData) => ({
+                url: "/users/me/avatar",
+                method: "POST",
+                body: formData,
+                formData: true,
+            }),
+            invalidatesTags: ["Me"],
+        })
     }),
 })
 
@@ -37,4 +46,5 @@ export const {
     useGetMeQuery,
     useUpdateMeMutation,
     useChangePasswordMutation,
+    useUploadAvatarMutation,
 } = userApi;

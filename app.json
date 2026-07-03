@@ -39,8 +39,16 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Frost a besoin d'accéder à tes photos pour modifier ton avatar.",
+          "cameraPermission": "Frost a besoin d'accéder à ta caméra pour prendre une photo."
+        }
+      ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

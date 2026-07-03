@@ -28,8 +28,34 @@ export default function Register() {
     setSubmitting(true);
     try {
       await register(name.trim(), email.trim(), password);
-    } catch {
-      setError("Création du compte impossible pour l'instant.");
+    } catch (e: any) {
+      const status = e?.status ?? e?.data?.statusCode;
+      const msg = e?.data?.message;
+
+      if (status === 409) {
+        // Backend renvoie 409 quand l'email est déjà utilisé
+        setError("Un compte existe déjà avec cet email.");
+      } else if (status === "FETCH_ERROR") {
+        setError("Impossible de joindre le serveur. Vérifie ta connexion.");
+      } else if (status === 400) {
+        // Erreurs de validation class-validator (msg est un tableau)
+        if (Array.isArray(msg)) {
+          // Traduction rapide des erreurs les plus fréquentes
+          if (msg.some((m: string) => m.includes("email"))) {
+            setError("L'email n'est pas valide.");
+          } else if (msg.some((m: string) => m.includes("password"))) {
+            setError("Mot de passe trop court (min 6 caractères).");
+          } else if (msg.some((m: string) => m.includes("name"))) {
+            setError("Le nom doit faire au moins 2 caractères.");
+          } else {
+            setError("Données invalides.");
+          }
+        } else {
+          setError("Données invalides.");
+        }
+      } else {
+        setError("Création du compte impossible pour l'instant.");
+      }
     } finally {
       setSubmitting(false);
     }

@@ -23,8 +23,20 @@ export const authApi = emptySplitApi.injectEndpoints?.({
                 method:"POST",
                 url:"/auth/register",
             })
-        })
+        }),
+        forgotPassword: builder.mutation<{ message: string }, { email: string }>({
+            query: (body) => ({
+                url: "/auth/forgot-password",
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation, useMeQuery, useRegisterMutation } = authApi;
+export const {
+    useLoginMutation,
+    useMeQuery,
+    useRegisterMutation,
+    useForgotPasswordMutation,
+} = authApi;
