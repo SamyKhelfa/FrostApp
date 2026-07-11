@@ -31,6 +31,16 @@ export const authApi = emptySplitApi.injectEndpoints?.({
                 body,
             }),
         }),
+        resetPassword: builder.mutation<
+            { message: string },
+            { token: string; newPassword: string }
+        >({
+            query: (body) => ({
+                url: "/auth/reset-password",
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -39,4 +49,5 @@ export const {
     useMeQuery,
     useRegisterMutation,
     useForgotPasswordMutation,
+    useResetPasswordMutation,
 } = authApi;

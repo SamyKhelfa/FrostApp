@@ -18,14 +18,7 @@ export const unstable_settings = {
   anchor: "(tabs)",
 };
 
-/**
- * AuthGate — protège les routes selon l'état d'auth.
- *
- * - Pendant qu'on lit SecureStore (isInitializing) → on ne fait rien
- * - Pendant un login/register/me en cours (isLogging) → on ne fait rien
- * - Si pas connecté et on N'EST PAS sur login/register → redirige vers login
- * - Si connecté et on EST sur login/register → redirige vers la home
- */
+
 function AuthGate() {
   const { isAuthenticated, isInitializing, isLogging } = useAuth();
   const segments = useSegments();
@@ -33,15 +26,16 @@ function AuthGate() {
   const navState = useRootNavigationState();
 
   useEffect(() => {
-    // Attendre que le navigator soit monté
     if (!navState?.key) return;
 
-    // Attendre la fin de la lecture du token et de useMeQuery
     if (isInitializing || isLogging) return;
 
     const first = segments[0];
     const inAuthRoute =
-      first === "login" || first === "register" || first === "forgot-password";
+        first === "login" ||
+        first === "register" ||
+        first === "forgot-password" ||
+        first === "reset-password";
 
     if (!isAuthenticated && !inAuthRoute) {
       router.replace("/login");
@@ -77,6 +71,7 @@ export default function RootLayout() {
             <Stack.Screen name="subscription" />
             <Stack.Screen name="terms" />
             <Stack.Screen name="privacy" />
+            <Stack.Screen name="reset-password" />
           </Stack>
           <AuthGate />
           <StatusBar style="auto" />
