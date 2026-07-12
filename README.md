@@ -22,9 +22,9 @@
 
 ## ✨ Overview
 
-FrostApp is a **full-stack mobile application** built as a personal project during my apprenticeship, combining a React Native front-end with a NestJS back-end and a PostgreSQL database. The app lets users explore structured cold-exposure programs, track their progression, and manage their profile — with a design system inspired by winter aesthetics.
+FrostApp is a **full-stack mobile application** built as a personal project during my apprenticeship, combining a React Native front-end with a NestJS back-end and a PostgreSQL database. The app lets users explore structured cold-exposure programs, track their progression, and manage their profile, with a design system inspired by winter aesthetics.
 
-The project is deliberately **over-engineered for its scale** — it's my playground to practice production patterns: JWT auth with persistent sessions, cache invalidation with RTK Query tags, image uploads to Cloudinary, transactional emails via Brevo, class-validator DTOs, and clean architecture with clear separation of concerns.
+The project is deliberately **over-engineered for its scale**, it's my playground to practice production patterns: JWT auth with persistent sessions, cache invalidation with RTK Query tags, image uploads to Cloudinary, transactional emails via Brevo, class-validator DTOs, and clean architecture with clear separation of concerns.
 
 <br />
 
