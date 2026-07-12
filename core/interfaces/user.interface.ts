@@ -10,4 +10,5 @@ export interface IUser {
     createdAt: string;
     updatedAt: string;
     lessons?: ILesson[];
+    emailVerified?: boolean;
 }

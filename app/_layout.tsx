@@ -35,7 +35,8 @@ function AuthGate() {
         first === "login" ||
         first === "register" ||
         first === "forgot-password" ||
-        first === "reset-password";
+        first === "reset-password" ||
+        first === "verify-email";
 
     if (!isAuthenticated && !inAuthRoute) {
       router.replace("/login");
@@ -72,6 +73,7 @@ export default function RootLayout() {
             <Stack.Screen name="terms" />
             <Stack.Screen name="privacy" />
             <Stack.Screen name="reset-password" />
+            <Stack.Screen name="verify-email" />
           </Stack>
           <AuthGate />
           <StatusBar style="auto" />

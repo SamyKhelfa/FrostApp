@@ -41,6 +41,20 @@ export const authApi = emptySplitApi.injectEndpoints?.({
                 body,
             }),
         }),
+        verifyEmail: builder.mutation<{ message: string }, { token: string }>({
+            query: (body) => ({
+                url: "/auth/verify-email",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Me"],
+        }),
+        resendVerificationEmail: builder.mutation<{ message: string }, void>({
+            query: () => ({
+                url: "/auth/resend-verification-email",
+                method: "POST",
+            }),
+        }),
     }),
 });
 
@@ -50,4 +64,6 @@ export const {
     useRegisterMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
+    useVerifyEmailMutation,
+    useResendVerificationEmailMutation,
 } = authApi;
