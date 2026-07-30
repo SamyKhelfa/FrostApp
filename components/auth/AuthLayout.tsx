@@ -8,7 +8,8 @@ type Props = {
   eyebrow: string;
   title: string;
   children: ReactNode;
-  footer: {
+  /** Optionnel : certains écrans (chargement, statut) n'ont pas de lien de bas de page. */
+  footer?: {
     mutedText: string;
     linkText: string;
     href: string;
@@ -27,14 +28,16 @@ export function AuthLayout({ eyebrow, title, children, footer }: Props) {
 
         <View style={styles.form}>{children}</View>
 
-        <Pressable
-          onPress={() => router.push(footer.href as never)}
-          style={styles.footerLink}
-          hitSlop={10}
-        >
-          <Text style={styles.footerLinkMuted}>{footer.mutedText} </Text>
-          <Text style={styles.footerLinkAccent}>{footer.linkText}</Text>
-        </Pressable>
+        {footer && (
+          <Pressable
+            onPress={() => router.push(footer.href as never)}
+            style={styles.footerLink}
+            hitSlop={10}
+          >
+            <Text style={styles.footerLinkMuted}>{footer.mutedText} </Text>
+            <Text style={styles.footerLinkAccent}>{footer.linkText}</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

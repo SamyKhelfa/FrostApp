@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
+import { Alert } from "react-native";
 import {
     createContext,
     ReactNode,
@@ -9,6 +10,7 @@ import {
     useState,
 } from "react";
 import {useLoginMutation, useRegisterMutation, useMeQuery} from "@/core/api";
+import { onSessionExpired } from "@/infra/http";
 import type {IUser} from "@/core/interfaces";
 
 const TOKEN_KEY = "auth-token";
@@ -51,8 +53,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, [meData]);
 
-
     const router = useRouter();
+
+    // Le token a été purgé par baseApi (expiré, ou compte désactivé côté admin) :
+    // on vide le state pour que AuthGate renvoie vers /login.
+    useEffect(() => {
+        return onSessionExpired((reason) => {
+            setToken(null);
+            setUser(null);
+            router.replace("/login");
+
+            if (reason === "disabled") {
+                Alert.alert(
+                    "Compte désactivé",
+                    "Ton compte a été désactivé. Contacte le support pour en savoir plus."
+                );
+            }
+        });
+    }, [router]);
 
     const login = useCallback(
         async (email: string, password: string) => {

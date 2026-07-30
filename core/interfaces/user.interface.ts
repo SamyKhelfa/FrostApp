@@ -11,4 +11,5 @@ export interface IUser {
     updatedAt: string;
     lessons?: ILesson[];
     emailVerified?: boolean;
+    avatar?: string | null;
 }

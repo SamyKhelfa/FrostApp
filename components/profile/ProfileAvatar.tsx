@@ -54,6 +54,16 @@ const styles = StyleSheet.create({
     },
     image: {
     },
+    placeholder: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: Colors.ice,
+    },
+    initials: {
+        color: Colors.navyAccent,
+        fontWeight: "700",
+        letterSpacing: 1,
+    },
     editButton: {
         position: "absolute",
         bottom: 4,

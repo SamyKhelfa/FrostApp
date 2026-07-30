@@ -8,6 +8,22 @@ const prodUrl = "http://localhost:3000";
 
 const apiUrl = IS_DEV ? devUrl : prodUrl;
 
+/**
+ * Notifie l'app quand la session n'est plus valide (token expiré, compte
+ * désactivé…). AuthContext s'y abonne pour vider son state et rediriger.
+ */
+type SessionExpiredReason = "unauthorized" | "disabled";
+type SessionExpiredListener = (reason: SessionExpiredReason) => void;
+
+const sessionExpiredListeners = new Set<SessionExpiredListener>();
+
+export function onSessionExpired(listener: SessionExpiredListener) {
+    sessionExpiredListeners.add(listener);
+    return () => {
+        sessionExpiredListeners.delete(listener);
+    };
+}
+
 const baseQueryWithReauth =
     (baseQueryOptions: Parameters<typeof fetchBaseQuery>[0]) =>
         async (
@@ -33,6 +49,11 @@ const baseQueryWithReauth =
             ) {
                 await SecureStore.deleteItemAsync("auth-token");
                 await SecureStore.deleteItemAsync("user");
+
+                const reason: SessionExpiredReason =
+                    result.error.status === 403 ? "disabled" : "unauthorized";
+
+                sessionExpiredListeners.forEach((listener) => listener(reason));
             }
 
             return result;

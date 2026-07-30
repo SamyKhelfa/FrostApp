@@ -89,7 +89,7 @@ export default function Profile() {
     return (
         <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingBottom: bottomPad }]}>
             <ProfileAvatar
-                uri={user?.avatar}
+                uri={user?.avatar ?? null}
                 name={user?.name}
                 onEdit={handleEditAvatar}
             />
