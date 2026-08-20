@@ -4,6 +4,7 @@ import React from "react";
 import { FloatingTabBar } from "@/components/ui/FloatingTabBar";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import ProfileIcon from "@/assets/images/profile.svg";
+import LessonIcon from "@/assets/images/lesson.svg";
 
 export default function TabLayout() {
   return (
@@ -17,13 +18,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Accueil",
-          tabBarIcon: ({ color, focused }) => (
-            <IconSymbol
-              size={focused ? 22 : 22}
-              name="house.fill"
-              color={color}
-            />
+          title: "Cours",
+          // lesson.svg est tracé en contour : on colore le stroke, pas le fill
+          tabBarIcon: ({ color }) => (
+            <LessonIcon width={22} height={22} stroke={color} />
           ),
         }}
       />

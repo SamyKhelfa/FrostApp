@@ -1,10 +1,32 @@
 import * as SecureStore from "expo-secure-store";
+import Constants from "expo-constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const IS_DEV = true;
 
-const devUrl = "http://localhost:3000";
-const prodUrl = "http://localhost:3000";
+const API_PORT = 3000;
+
+/**
+ * En dev, l'API tourne sur la machine de dev — pas sur l'appareil.
+ * "localhost" fonctionne sur simulateur (même pile réseau que le Mac) mais
+ * désigne le téléphone lui-même sur un appareil physique.
+ *
+ * Expo expose l'hôte du bundler Metro (ex: "192.168.0.214:8081") : on en
+ * extrait l'IP de la machine de dev, valable dans les deux cas.
+ */
+function resolveDevUrl(): string {
+    const hostUri =
+        Constants.expoConfig?.hostUri ??
+        (Constants.expoGoConfig as { debuggerHost?: string } | undefined)
+            ?.debuggerHost;
+
+    const host = hostUri?.split(":")[0];
+
+    return host ? `http://${host}:${API_PORT}` : `http://localhost:${API_PORT}`;
+}
+
+const devUrl = resolveDevUrl();
+const prodUrl = `http://localhost:${API_PORT}`;
 
 const apiUrl = IS_DEV ? devUrl : prodUrl;
 

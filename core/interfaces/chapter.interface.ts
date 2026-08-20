@@ -1,4 +1,5 @@
 import type { ILesson } from "./lesson.interface";
+import type { ISubchapter } from "./subchapter.interface";
 
 export interface IChapter {
     id: number;
@@ -11,5 +12,5 @@ export interface IChapter {
     lesson: ILesson;
     createdAt: string;
     updateAt: string;
-    subchapters?: IChapter[];
+    subChapters?: ISubchapter[];
 }

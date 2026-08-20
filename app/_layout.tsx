@@ -74,6 +74,8 @@ export default function RootLayout() {
             <Stack.Screen name="privacy" />
             <Stack.Screen name="reset-password" />
             <Stack.Screen name="verify-email" />
+            <Stack.Screen name="lesson/[id]" />
+            <Stack.Screen name="subchapter/[id]" />
           </Stack>
           <AuthGate />
           <StatusBar style="auto" />

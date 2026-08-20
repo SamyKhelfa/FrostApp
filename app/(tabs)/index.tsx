@@ -1,82 +1,36 @@
-import { useState } from "react";
 import {
   FlatList,
-  LayoutAnimation,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
-  UIManager,
   View,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Screen } from "@/components/screen/Screen";
 import { Colors } from "@/constants/colors";
-import { useGetLessonQuery, useGetLessonByIdQuery } from "@/core/api";
-import type { IChapter, ILesson } from "@/core/interfaces";
+import { useGetLessonQuery } from "@/core/api";
+import type { ILesson } from "@/core/interfaces";
 
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
-// ─── Chapter (affichage simple, pas de subChapters côté API pour l'instant) ──
-function ChapterItem({ chapter }: { chapter: IChapter }) {
-  return (
-    <View style={styles.chapterCard}>
-      <Text style={styles.chapterTitle}>• {chapter.title}</Text>
-      <Text style={styles.chapterDescription}>{chapter.description}</Text>
-    </View>
-  );
-}
-
+/** Carte de cours : mène au détail (chapitres + modules). */
 function LessonItem({ lesson }: { lesson: ILesson }) {
-  const [chaptersOpen, setChaptersOpen] = useState(false);
-
-  const { data: lessonDetails, isLoading } = useGetLessonByIdQuery(lesson.id, {
-    skip: !chaptersOpen,
-  });
-
-  const toggleChapters = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setChaptersOpen((v) => !v);
-  };
-
-  const chapters = lessonDetails?.chapters ?? [];
+  const router = useRouter();
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>{lesson.title}</Text>
-      <Text style={styles.cardDescription}>{lesson.description}</Text>
-
-      <Pressable onPress={toggleChapters} style={styles.chaptersHeader}>
-        <Text style={styles.chaptersLabel}>
-          Chapitres{chaptersOpen ? ` (${chapters.length})` : ""}
+    <Pressable
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      onPress={() => router.push(`/lesson/${lesson.id}`)}
+    >
+      <View style={styles.cardText}>
+        <Text style={styles.cardTitle}>{lesson.title}</Text>
+        <Text style={styles.cardDescription} numberOfLines={3}>
+          {lesson.description}
         </Text>
-        <Text style={[styles.chevron, chaptersOpen && styles.chevronOpen]}>
-          ›
-        </Text>
-      </Pressable>
+      </View>
 
-      {chaptersOpen && (
-        <View style={styles.chaptersBlock}>
-          {isLoading && (
-            <Text style={styles.chapterDescription}>Chargement…</Text>
-          )}
-          <FlatList
-            data={chapters}
-            keyExtractor={(chapter) => chapter.id.toString()}
-            scrollEnabled={false}
-            renderItem={({ item: chapter }) => (
-              <ChapterItem chapter={chapter} />
-            )}
-          />
-        </View>
-      )}
-    </View>
+      <Text style={styles.chevron}>›</Text>
+    </Pressable>
   );
 }
 
@@ -91,9 +45,7 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <Screen style={styles.screen}>
-        <Text style={{ color: Colors.navyAccent, padding: 20 }}>
-          Chargement…
-        </Text>
+        <Text style={styles.stateText}>Chargement…</Text>
       </Screen>
     );
   }
@@ -101,7 +53,7 @@ export default function HomeScreen() {
   if (error) {
     return (
       <Screen style={styles.screen}>
-        <Text style={{ color: Colors.danger, padding: 20 }}>
+        <Text style={[styles.stateText, styles.errorText]}>
           Erreur de chargement des cours.
         </Text>
       </Screen>
@@ -116,24 +68,36 @@ export default function HomeScreen() {
         contentContainerStyle={[styles.list, { paddingBottom: bottomPad }]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item }) => <LessonItem lesson={item} />}
+        ListEmptyComponent={
+          <Text style={styles.stateText}>Aucun cours disponible.</Text>
+        }
       />
     </Screen>
   );
 }
 
-const NAVY = Colors.navyAccent;
-const ICE = Colors.ice;
-
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.appBg },
   list: {
     paddingVertical: 20,
-    paddingHorizontal: 16,   // 👈 padding déplacé ici
+    paddingHorizontal: 16,
   },
   separator: { height: 16 },
 
+  stateText: {
+    color: Colors.navyAccent,
+    padding: 20,
+    textAlign: "center",
+  },
+  errorText: {
+    color: Colors.danger,
+  },
+
   card: {
-    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 20,
     shadowColor: "#000",
@@ -142,67 +106,27 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
+  cardPressed: {
+    opacity: 0.75,
+  },
+  cardText: {
+    flex: 1,
+  },
   cardTitle: {
-    color: NAVY,
+    color: Colors.navyAccent,
     fontSize: 20,
     fontWeight: "800",
     letterSpacing: 0.3,
     marginBottom: 6,
   },
   cardDescription: {
-    color: "#445A77",
+    color: Colors.mutedDark,
     fontSize: 14,
     lineHeight: 20,
-    marginBottom: 8,
   },
-
-  chaptersHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 16,
-    paddingTop: 14,
-    borderTopWidth: 1,
-    borderTopColor: "#E6EBF2",
-  },
-  chaptersBlock: {
-    marginTop: 10,
-  },
-  chaptersLabel: {
-    color: NAVY,
-    fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 2,
-    textTransform: "uppercase",
-  },
-
-  chapterCard: {
-    backgroundColor: "#F2F6FB",
-    borderLeftWidth: 3,
-    borderLeftColor: ICE,
-    borderRadius: 10,
-    padding: 12,
-    marginVertical: 5,
-  },
-  chapterTitle: {
-    color: NAVY,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  chapterDescription: {
-    color: "#5A6B85",
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 2,
-  },
-
   chevron: {
-    fontSize: 24,
-    color: NAVY,
+    fontSize: 28,
+    color: Colors.muted,
     fontWeight: "300",
-    transform: [{ rotate: "90deg" }],
-  },
-  chevronOpen: {
-    transform: [{ rotate: "270deg" }],
   },
 });
