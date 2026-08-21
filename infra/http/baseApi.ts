@@ -6,14 +6,6 @@ const IS_DEV = true;
 
 const API_PORT = 3000;
 
-/**
- * En dev, l'API tourne sur la machine de dev — pas sur l'appareil.
- * "localhost" fonctionne sur simulateur (même pile réseau que le Mac) mais
- * désigne le téléphone lui-même sur un appareil physique.
- *
- * Expo expose l'hôte du bundler Metro (ex: "192.168.0.214:8081") : on en
- * extrait l'IP de la machine de dev, valable dans les deux cas.
- */
 function resolveDevUrl(): string {
     const hostUri =
         Constants.expoConfig?.hostUri ??
@@ -30,10 +22,6 @@ const prodUrl = `http://localhost:${API_PORT}`;
 
 const apiUrl = IS_DEV ? devUrl : prodUrl;
 
-/**
- * Notifie l'app quand la session n'est plus valide (token expiré, compte
- * désactivé…). AuthContext s'y abonne pour vider son state et rediriger.
- */
 type SessionExpiredReason = "unauthorized" | "disabled";
 type SessionExpiredListener = (reason: SessionExpiredReason) => void;
 
@@ -83,7 +71,7 @@ const baseQueryWithReauth =
 
 export const emptySplitApi = createApi({
     reducerPath: "api",
-    tagTypes: ["Me"],
+    tagTypes: ["Me", "Progress"],
     baseQuery: baseQueryWithReauth({
         baseUrl: apiUrl,
         prepareHeaders: async (headers: Headers) => {

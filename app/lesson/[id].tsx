@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   SectionList,
@@ -7,19 +8,31 @@ import {
   Text,
   View,
 } from "react-native";
+import { useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { Colors } from "@/constants/colors";
-import { useGetLessonByIdQuery } from "@/core/api";
+import {
+  useCompleteModuleMutation,
+  useGetLessonByIdQuery,
+  useGetMyProgressQuery,
+  useUncompleteModuleMutation,
+} from "@/core/api";
 import type { ISubchapter } from "@/core/interfaces";
 
 function ModuleRow({
   subchapter,
+  completed,
+  busy,
   onPress,
+  onToggle,
 }: {
   subchapter: ISubchapter;
+  completed: boolean;
+  busy: boolean;
   onPress: () => void;
+  onToggle: () => void;
 }) {
   return (
     <Pressable
@@ -35,7 +48,32 @@ function ModuleRow({
         )}
       </View>
 
-      <View style={styles.circle} />
+      {}
+      <Pressable
+        onPress={onToggle}
+        disabled={busy}
+        hitSlop={12}
+        accessibilityRole="button"
+        accessibilityLabel={
+          completed
+            ? `Annuler la validation de ${subchapter.title}`
+            : `Valider ${subchapter.title}`
+        }
+        style={({ pressed }) => [
+          styles.circle,
+          completed && styles.circleDone,
+          pressed && styles.circlePressed,
+        ]}
+      >
+        {busy ? (
+          <ActivityIndicator
+            size="small"
+            color={completed ? Colors.snow : Colors.muted}
+          />
+        ) : (
+          completed && <Text style={styles.circleCheck}>✓</Text>
+        )}
+      </Pressable>
     </Pressable>
   );
 }
@@ -49,6 +87,12 @@ export default function LessonDetail() {
     isLoading,
     error,
   } = useGetLessonByIdQuery(Number(id));
+
+  const { data: progress } = useGetMyProgressQuery();
+  const [completeModule] = useCompleteModuleMutation();
+  const [uncompleteModule] = useUncompleteModuleMutation();
+
+  const [togglingId, setTogglingId] = useState<number | null>(null);
 
   if (isLoading) {
     return (
@@ -71,11 +115,38 @@ export default function LessonDetail() {
     );
   }
 
-  const sections = (lesson.chapters ?? []).map((chapter) => ({
-    title: chapter.title,
-    count: chapter.subChapters?.length ?? 0,
-    data: chapter.subChapters ?? [],
-  }));
+  const completedIds = new Set(
+    (progress ?? []).map((entry) => entry.subChapterId),
+  );
+
+  const handleToggle = async (moduleId: number, isDone: boolean) => {
+    setTogglingId(moduleId);
+    try {
+      if (isDone) {
+        await uncompleteModule(moduleId).unwrap();
+      } else {
+        await completeModule(moduleId).unwrap();
+      }
+    } catch {
+      Alert.alert(
+        "Action impossible",
+        "Vérifie ta connexion et réessaie.",
+      );
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const sections = (lesson.chapters ?? []).map((chapter) => {
+    const modules = chapter.subChapters ?? [];
+
+    return {
+      title: chapter.title,
+      count: modules.length,
+      doneCount: modules.filter((module) => completedIds.has(module.id)).length,
+      data: modules,
+    };
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,7 +167,11 @@ export default function LessonDetail() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
             <Text style={styles.sectionCount}>
-              {section.count} {section.count > 1 ? "modules" : "module"}
+              {section.count > 0
+                ? `${section.doneCount}/${section.count} ${
+                    section.count > 1 ? "modules" : "module"
+                  }`
+                : "0 module"}
             </Text>
           </View>
         )}
@@ -108,7 +183,16 @@ export default function LessonDetail() {
         renderItem={({ item }) => (
           <ModuleRow
             subchapter={item}
-            onPress={() => router.push(`/subchapter/${item.id}`)}
+            completed={completedIds.has(item.id)}
+            busy={togglingId === item.id}
+            onToggle={() => handleToggle(item.id, completedIds.has(item.id))}
+            onPress={() =>
+              router.push({
+                pathname: "/subchapter/[id]",
+
+                params: { id: item.id, lessonId: lesson.id },
+              })
+            }
           />
         )}
         ListEmptyComponent={
@@ -210,6 +294,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: Colors.iceBorder,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circlePressed: {
+    opacity: 0.6,
+  },
+  circleDone: {
+    backgroundColor: Colors.navyAccent,
+    borderColor: Colors.navyAccent,
+  },
+  circleCheck: {
+    color: Colors.snow,
+    fontSize: 13,
+    fontWeight: "700",
+    marginTop: -1,
   },
 
   emptyText: {

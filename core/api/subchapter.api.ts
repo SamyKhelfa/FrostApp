@@ -1,15 +1,15 @@
-import {
-    PaginatedResult,
-    PaginationParams,
-    type ISubchapter,
-} from "@/core/interfaces";
+import { type ISubchapter } from "@/core/interfaces";
+import { emptySplitApi } from "@/infra/http";
 
-const defaultPaginationParams = {
-    page: 1,
-    limit: 10,
-    enablePagination: true,
-}
+export const subchapterApi = emptySplitApi.injectEndpoints({
+    endpoints: (builder) => ({
+        getSubchapterById: builder.query<ISubchapter, number>({
+            query: (id) => ({
+                url: `/subchapters/${id}`,
+                method: "GET",
+            }),
+        }),
+    }),
+});
 
-export const subchapterApi = {
-
-}
+export const { useGetSubchapterByIdQuery } = subchapterApi;

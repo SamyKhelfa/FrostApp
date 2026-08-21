@@ -8,6 +8,8 @@ export interface ISubchapter {
     duration: number;
     active: boolean;
     position: number;
-    chapter: IChapter;
+    chapterId: number | null;
+
+    chapter?: IChapter;
     status: boolean;
 }
