@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import { AuthProvider, useAuth } from "@/core/context/AuthContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Provider } from "react-redux";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { store } from "@/core/redux";
 
 export const unstable_settings = {
@@ -59,7 +60,8 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Provider store={store}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
       <AuthProvider>
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
           <Stack screenOptions={{ headerShown: false }}>
@@ -81,6 +83,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
         </ThemeProvider>
       </AuthProvider>
-    </Provider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
