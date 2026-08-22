@@ -78,6 +78,10 @@ export default function RootLayout() {
             <Stack.Screen name="verify-email" />
             <Stack.Screen name="lesson/[id]" />
             <Stack.Screen name="subchapter/[id]" />
+            <Stack.Screen name="conversation/[id]/index" />
+            <Stack.Screen name="conversation/[id]/settings" />
+            <Stack.Screen name="community/new" />
+            <Stack.Screen name="notifications" />
           </Stack>
           <AuthGate />
           <StatusBar style="auto" />

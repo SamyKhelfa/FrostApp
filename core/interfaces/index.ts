@@ -5,4 +5,6 @@ export * from "./lesson.interface";
 export * from "./chapter.interface";
 export * from "./subchapter.interface";
 export * from "./progress.interface";
+export * from "./chat.interface";
+export * from "./notification.interface";
 export * from "./user-actions.interface"
