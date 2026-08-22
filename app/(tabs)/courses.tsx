@@ -36,7 +36,7 @@ function LessonItem({ lesson }: { lesson: ILesson }) {
 
 const FLOATING_TAB_BAR_CONTENT_PAD = 96;
 
-export default function HomeScreen() {
+export default function CoursesScreen() {
   const insets = useSafeAreaInsets();
   const bottomPad = FLOATING_TAB_BAR_CONTENT_PAD + Math.max(insets.bottom, 14);
 
