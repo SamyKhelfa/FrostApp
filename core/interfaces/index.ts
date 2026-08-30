@@ -7,4 +7,5 @@ export * from "./subchapter.interface";
 export * from "./progress.interface";
 export * from "./chat.interface";
 export * from "./notification.interface";
+export * from "./cold-shower.interface";
 export * from "./user-actions.interface"

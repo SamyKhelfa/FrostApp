@@ -14,6 +14,7 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/colors";
 import { useAuth } from "@/core/context/AuthContext";
 import {
+  useGetColdShowerStatsQuery,
   useGetLessonQuery,
   useGetMyProgressQuery,
   useGetNotificationsQuery,
@@ -48,6 +49,7 @@ export default function HomeScreen() {
   const { data: lessons, isLoading: isLoadingLessons } = useGetLessonQuery();
   const { data: notifications, refetch: refetchNotifications } =
     useGetNotificationsQuery();
+  const { data: coldShowers } = useGetColdShowerStatsQuery();
 
   useFocusEffect(
     useCallback(() => {
@@ -105,6 +107,28 @@ export default function HomeScreen() {
             label={courses.length > 1 ? "cours disponibles" : "cours disponible"}
           />
         </View>
+
+        <Pressable
+          style={({ pressed }) => [styles.streak, pressed && styles.pressed]}
+          onPress={() => router.push("/(tabs)/cold-showers")}
+        >
+          <View style={styles.streakText}>
+            <Text style={styles.streakValue}>
+              {coldShowers?.currentStreak ?? 0}
+              <Text style={styles.streakUnit}>
+                {(coldShowers?.currentStreak ?? 0) > 1 ? " jours" : " jour"}
+              </Text>
+            </Text>
+            <Text style={styles.streakLabel}>
+              {coldShowers?.loggedToday
+                ? "Série en cours. À demain."
+                : "Ta douche du jour t'attend."}
+            </Text>
+          </View>
+          <Text style={styles.streakEmoji}>
+            {coldShowers?.loggedToday ? "❄️" : "🚿"}
+          </Text>
+        </Pressable>
 
         <Text style={styles.sectionTitle}>Continuer</Text>
 
@@ -219,6 +243,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+
+  streak: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 12,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: Colors.navyAccent,
+  },
+  streakText: { flex: 1 },
+  streakValue: {
+    color: Colors.snow,
+    fontSize: 30,
+    fontWeight: "800",
+  },
+  streakUnit: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  streakLabel: {
+    color: Colors.ice,
+    fontSize: 13,
+    marginTop: 2,
+  },
+  streakEmoji: { fontSize: 32 },
 
   sectionTitle: {
     color: Colors.mutedSoft,

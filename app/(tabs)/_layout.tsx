@@ -33,6 +33,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="cold-showers"
+        options={{
+          title: "Douches",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={22} name="snowflake" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="chat"
         options={{
           title: "Messages",

@@ -89,6 +89,7 @@ export const emptySplitApi = createApi({
         "Requests",
         "Details",
         "Notifications",
+        "ColdShowers",
     ],
     baseQuery: baseQueryWithReauth({
         baseUrl: apiUrl,

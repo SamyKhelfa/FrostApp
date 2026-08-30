@@ -5,3 +5,4 @@ export * from "./subchapter.api";
 export * from "./progress.api";
 export * from "./chat.api";
 export * from "./notification.api";
+export * from "./coldShower.api";

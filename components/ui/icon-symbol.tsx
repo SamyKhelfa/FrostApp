@@ -21,6 +21,7 @@ const MAPPING = {
   'bubble.left.and.bubble.right.fill': 'forum',
   'bell.fill': 'notifications',
   'book.fill': 'menu-book',
+  'snowflake': 'ac-unit',
 } as IconMapping;
 
 /**
