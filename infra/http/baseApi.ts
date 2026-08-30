@@ -2,8 +2,6 @@ import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const IS_DEV = true;
-
 const API_PORT = 3000;
 
 function resolveDevUrl(): string {
@@ -17,10 +15,21 @@ function resolveDevUrl(): string {
     return host ? `http://${host}:${API_PORT}` : `http://localhost:${API_PORT}`;
 }
 
-const devUrl = resolveDevUrl();
-const prodUrl = `http://localhost:${API_PORT}`;
+function resolveApiUrl(): string {
+    const configured =
+        process.env.EXPO_PUBLIC_API_URL ??
+        (Constants.expoConfig?.extra as { apiUrl?: string } | undefined)?.apiUrl;
 
-const apiUrl = IS_DEV ? devUrl : prodUrl;
+    if (configured) return configured.replace(/\/$/, "");
+
+    if (__DEV__) return resolveDevUrl();
+
+    throw new Error(
+        "EXPO_PUBLIC_API_URL doit etre defini pour une build de production.",
+    );
+}
+
+const apiUrl = resolveApiUrl();
 
 type SessionExpiredReason = "unauthorized" | "disabled";
 type SessionExpiredListener = (reason: SessionExpiredReason) => void;

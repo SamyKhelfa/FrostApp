@@ -32,16 +32,18 @@ function AuthGate() {
     if (isInitializing || isLogging) return;
 
     const first = segments[0];
-    const inAuthRoute =
+
+    const anonymousOnly =
         first === "login" ||
         first === "register" ||
         first === "forgot-password" ||
-        first === "reset-password" ||
-        first === "verify-email";
+        first === "reset-password";
 
-    if (!isAuthenticated && !inAuthRoute) {
+    const alwaysReachable = first === "verify-email";
+
+    if (!isAuthenticated && !anonymousOnly && !alwaysReachable) {
       router.replace("/login");
-    } else if (isAuthenticated && inAuthRoute) {
+    } else if (isAuthenticated && anonymousOnly) {
       router.replace("/(tabs)");
     }
   }, [
