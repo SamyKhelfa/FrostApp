@@ -1,6 +1,8 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import {
+  DarkTheme,
+  DefaultTheme,
   Stack,
+  ThemeProvider,
   useRootNavigationState,
   useRouter,
   useSegments,
