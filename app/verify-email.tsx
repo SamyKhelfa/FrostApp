@@ -10,15 +10,15 @@ export default function VerifyEmail() {
     const { token } = useLocalSearchParams<{ token?: string }>();
     const [verifyEmail] = useVerifyEmailMutation();
 
-    const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [status, setStatus] = useState<"loading" | "success" | "error">(
+        token ? "loading" : "error"
+    );
+    const [errorMessage, setErrorMessage] = useState<string | null>(
+        token ? null : "Le lien est incomplet."
+    );
 
     useEffect(() => {
-        if (!token) {
-            setStatus("error");
-            setErrorMessage("Le lien est incomplet.");
-            return;
-        }
+        if (!token) return;
 
         (async () => {
             try {

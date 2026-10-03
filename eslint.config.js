@@ -7,4 +7,11 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  {
+    rules: {
+      // Reanimated worklets mutate shared values by design, which the React
+      // Compiler rule reads as mutating a value captured by an effect.
+      'react-hooks/immutability': 'off',
+    },
+  },
 ]);
