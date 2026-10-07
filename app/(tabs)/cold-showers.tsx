@@ -146,9 +146,13 @@ export default function ColdShowers() {
     setSelected(null);
   }, []);
 
+  const dismissKeyboard = useCallback(() => {
+    Keyboard.dismiss();
+  }, []);
+
   const dragToDismiss = Gesture.Pan()
     .onBegin(() => {
-      runOnJS(Keyboard.dismiss)();
+      runOnJS(dismissKeyboard)();
     })
     .onUpdate((event) => {
       sheetY.value = Math.max(0, event.translationY);
