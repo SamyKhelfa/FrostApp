@@ -22,7 +22,7 @@ import {
   useGetSubchapterByIdQuery,
   useUncompleteModuleMutation,
 } from "@/core/api";
-import { toVimeoEmbedUrl } from "@/core/utils/vimeo";
+import { embedHtml, toVideoEmbed } from "@/core/utils/video";
 
 export default function SubchapterDetail() {
   const { id, lessonId } = useLocalSearchParams<{
@@ -132,18 +132,18 @@ export default function SubchapterDetail() {
     );
   }
 
-  const embedUrl = toVimeoEmbedUrl(subchapter.video);
+  const embed = toVideoEmbed(subchapter.video);
+  const hasUnreadableVideo = !!subchapter.video?.trim() && !embed;
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <ScreenHeader eyebrow="MODULE" title={subchapter.title} />
 
-        {embedUrl && (
-
+        {embed && (
           <View style={styles.playerFrame}>
             <WebView
-              source={{ uri: embedUrl }}
+              source={{ html: embedHtml(embed), baseUrl: embed.origin }}
               style={styles.player}
               allowsFullscreenVideo
               allowsInlineMediaPlayback
@@ -155,6 +155,13 @@ export default function SubchapterDetail() {
               )}
             />
           </View>
+        )}
+
+        {hasUnreadableVideo && (
+          <Text style={styles.unreadableVideo}>
+            Ce lien vidéo n&apos;est pas reconnu. Utilise une adresse YouTube ou
+            Vimeo.
+          </Text>
         )}
 
         {subchapter.duration > 0 && (
@@ -328,6 +335,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.navyDeep,
   },
 
+  unreadableVideo: {
+    color: Colors.mutedSoft,
+    fontSize: 13,
+    fontStyle: "italic",
+    lineHeight: 19,
+  },
   duration: {
     color: Colors.mutedSoft,
     fontSize: 12,
