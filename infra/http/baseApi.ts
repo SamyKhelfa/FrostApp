@@ -31,6 +31,8 @@ function resolveApiUrl(): string {
 
 const apiUrl = resolveApiUrl();
 
+const ACCOUNT_DISABLED = "ACCOUNT_DISABLED";
+
 type SessionExpiredReason = "unauthorized" | "disabled";
 type SessionExpiredListener = (reason: SessionExpiredReason) => void;
 
@@ -62,15 +64,21 @@ const baseQueryWithReauth =
                 "url" in args &&
                 (args as { url: string }).url.includes("/auth/login");
 
+            const accountDisabled =
+                result?.error?.status === 403 &&
+                (result.error.data as { code?: string } | undefined)?.code ===
+                    ACCOUNT_DISABLED;
+
             if (
                 !isAuthLogin &&
-                (result?.error?.status === 401 || result?.error?.status === 403)
+                (result?.error?.status === 401 || accountDisabled)
             ) {
                 await SecureStore.deleteItemAsync("auth-token");
                 await SecureStore.deleteItemAsync("user");
 
-                const reason: SessionExpiredReason =
-                    result.error.status === 403 ? "disabled" : "unauthorized";
+                const reason: SessionExpiredReason = accountDisabled
+                    ? "disabled"
+                    : "unauthorized";
 
                 sessionExpiredListeners.forEach((listener) => listener(reason));
             }
