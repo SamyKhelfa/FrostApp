@@ -16,6 +16,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 
 import { Colors } from "@/constants/colors";
+import {
+  buildAuthorColors,
+  fallbackAuthorColor,
+} from "@/core/utils/authorColor";
 import { useAuth } from "@/core/context/AuthContext";
 import {
   useGetConversationDetailsQuery,
@@ -38,16 +42,20 @@ function MessageBubble({
   message,
   isMine,
   showAuthor,
+  authorColor,
 }: {
   message: IMessage;
   isMine: boolean;
   showAuthor: boolean;
+  authorColor: string;
 }) {
   return (
     <View style={[styles.bubbleRow, isMine && styles.bubbleRowMine]}>
       <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
         {!isMine && showAuthor && (
-          <Text style={styles.author}>{message.author?.name ?? "Anonyme"}</Text>
+          <Text style={[styles.author, { color: authorColor }]}>
+            {message.author?.name ?? "Anonyme"}
+          </Text>
         )}
         <Text style={[styles.content, isMine && styles.contentMine]}>
           {message.content}
@@ -108,6 +116,10 @@ export default function ConversationThread() {
     );
   }
 
+  const authorColors = buildAuthorColors(
+    (details?.members ?? []).map((member) => member.userId),
+  );
+
   const ordered = [...(messages ?? [])].reverse();
   const bottomPad = Math.max(insets.bottom, 14);
 
@@ -151,6 +163,9 @@ export default function ConversationThread() {
             <MessageBubble
               message={item}
               isMine={item.authorId === user?.id}
+              authorColor={
+                authorColors[item.authorId] ?? fallbackAuthorColor(item.authorId)
+              }
               showAuthor={!next || next.authorId !== item.authorId}
             />
           );

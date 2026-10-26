@@ -34,6 +34,18 @@ export const Colors = {
   borderLight: "#E6EBF2",     // dividers / input borders on light bg
   iceLight: "#F2F6FB",        // very light tint backgrounds
   iceBorder: "#D4E2F2",       // borders for subchapter indents
+
+  // Couleurs de pseudo dans les conversations, contraste AA sur blanc
+  authorPalette: [
+    "#1F6FB2",
+    "#0E7C6B",
+    "#A23E48",
+    "#6B4FA8",
+    "#9A6410",
+    "#2F7A3E",
+    "#A33C7A",
+    "#3B5BA5",
+  ] as const,
 };
 
 // Alpha overlays (used in glassmorphism cards on navy)
